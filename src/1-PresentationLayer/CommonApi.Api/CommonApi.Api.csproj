@@ -2,8 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <UserSecretsId>0afe1e32-a688-4186-9af2-acafb9cc1a86</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +18,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\2-BusinessLayer\CommonApi.Business\CommonApi.Business.csproj" />
+    <ProjectReference Include="..\..\3-DataLayer\CommonApi.Validation\CommonApi.Validation.csproj" />
     <ProjectReference Include="..\..\5-CommonLayer\CommonApi.Util\CommonApi.Util.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

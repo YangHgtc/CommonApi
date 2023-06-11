@@ -6,6 +6,9 @@ using CommonApi.DTO.Requests;
 using CommonApi.DTO.Responses;
 using Microsoft.AspNetCore.Mvc;
 
+/// <summary>
+/// 
+/// </summary>
 public class WeatherForecastController : BaseController
 {
     private readonly ILogger<WeatherForecastController> _logger;
@@ -17,6 +20,10 @@ public class WeatherForecastController : BaseController
         _weatherService = weatherService;
     }
 
+    /// <summary>
+    /// 获取天气
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public IEnumerable<WeatherResponse> GetWeatherForecast()
     {
@@ -24,6 +31,11 @@ public class WeatherForecastController : BaseController
         return _weatherService.GetWeather();
     }
 
+    /// <summary>
+    /// 请求天气
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     public bool PostWeatherForecast(WeatherRequest request)
     {

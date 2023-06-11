@@ -1,4 +1,6 @@
-using System.Reflection;
+using CommonApi.Business;
+using CommonApi.Repository;
+using CommonApi.Validation;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
@@ -6,28 +8,59 @@ namespace CommonApi.Api.Extensions
 {
     public static class ServiceExtension
     {
+        /// <summary>
+        /// 注入所需服务
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddRepository();
-            services.AddBusiness();
-            services.AddValidation();
+            services.AddMiddlerwares()
+                    .AddRepository()
+                    .AddBusiness()
+                    .AddValidation();
             return services;
         }
 
+        /// <summary>
+        /// 注入中间件
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddMiddlerwares(this IServiceCollection services)
+        {
+            services.Scan(scan =>
+            {
+                scan.FromAssemblyOf<Program>()
+                .AddClasses(x => x.Where(y => y.Namespace!.Contains("Middlewares", StringComparison.OrdinalIgnoreCase)))
+                .AsSelf()
+                .WithSingletonLifetime();
+            });
+            return services;
+        }
+
+        /// <summary>
+        /// 注入验证规则
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddValidation(this IServiceCollection services)
         {
-            var validation = Assembly.Load("CommonApi.Validation");
-            services.AddValidatorsFromAssembly(validation)
+            services.AddValidatorsFromAssemblyContaining<ValidationForScrutor>()
                     .AddFluentValidationAutoValidation();
             return services;
         }
 
+        /// <summary>
+        /// 注入business
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddBusiness(this IServiceCollection services)
         {
-            var business = Assembly.Load("CommonApi.Business");
             services.Scan(scan =>
             {
-                scan.FromAssemblies(business)
+                scan.FromAssemblyOf<BusinessForScrutor>()
                 .AddClasses()
                 .AsMatchingInterface()
                 .WithScopedLifetime();
@@ -35,12 +68,16 @@ namespace CommonApi.Api.Extensions
             return services;
         }
 
+        /// <summary>
+        /// 注入仓储
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
-            var repository = Assembly.Load("CommonApi.Repository");
             services.Scan(scan =>
             {
-                scan.FromAssemblies(repository)
+                scan.FromAssemblyOf<RepositoryForScrutor>()
                 .AddClasses()
                 .AsMatchingInterface()
                 .WithScopedLifetime();

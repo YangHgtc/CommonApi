@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using CommonApi.Util;
 using Serilog;
 
 namespace CommonApi.Api.Middlewares;
@@ -41,7 +42,7 @@ public sealed class MyExceptionMiddleware : IMiddleware
             {
                 response.ContentType = "application/json";
                 response.StatusCode = errorResult.StatusCode;
-                await response.WriteAsync(JsonSerializer.Serialize(errorResult));
+                await response.WriteAsync(JsonSerializer.Serialize(errorResult, JsonHelper.jsonSerializerOptions));
             }
             else
             {
