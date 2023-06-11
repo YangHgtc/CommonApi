@@ -15,12 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\2-BusinessLayer\CommonApi.Business\CommonApi.Business.csproj" />
-    <ProjectReference Include="..\..\2-BusinessLayer\CommonApi.Validation\CommonApi.Validation.csproj" />
     <ProjectReference Include="..\..\5-CommonLayer\CommonApi.Util\CommonApi.Util.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ActionFilters\" />
   </ItemGroup>
 
 </Project>
