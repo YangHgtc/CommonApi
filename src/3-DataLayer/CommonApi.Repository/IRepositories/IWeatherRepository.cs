@@ -1,7 +1,6 @@
-namespace CommonApi.Repository.IRepositories
+namespace CommonApi.Repository.IRepositories;
+
+public interface IWeatherRepository
 {
-    public interface IWeatherRepository
-    {
-        string[] GetSummaries();
-    }
+    string[] GetSummaries();
 }

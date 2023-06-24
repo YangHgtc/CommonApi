@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <Authors>yzc</Authors>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+</Project>

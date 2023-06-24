@@ -1,20 +1,23 @@
 namespace CommonApi.Api.Controllers;
 
-using CommonApi.Api.Common;
 using CommonApi.Business.IServices;
+using CommonApi.Common.Common;
 using CommonApi.DTO.Requests;
 using CommonApi.DTO.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 /// <summary>
-/// 
+///
 /// </summary>
-public class WeatherForecastController : BaseController
+public class WeatherForecastController : ApiControllerBase
 {
     private readonly ILogger<WeatherForecastController> _logger;
     private readonly IWeatherService _weatherService;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherService weatherService)
+    public WeatherForecastController(
+        ILogger<WeatherForecastController> logger,
+        IWeatherService weatherService,
+        IServiceProvider serviceProvider) : base(serviceProvider)
     {
         _logger = logger;
         _weatherService = weatherService;
@@ -25,10 +28,11 @@ public class WeatherForecastController : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public IEnumerable<WeatherResponse> GetWeatherForecast()
+    public ResponseResult<IEnumerable<WeatherResponse>> GetWeatherForecast()
     {
         _logger.LogDebug("");
-        return _weatherService.GetWeather();
+        var res = _weatherService.GetWeather();
+        return Success(res);
     }
 
     /// <summary>
@@ -37,8 +41,9 @@ public class WeatherForecastController : BaseController
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    public bool PostWeatherForecast(WeatherRequest request)
+    public async Task<ResponseResult<bool>> PostWeatherForecast(WeatherRequest request)
     {
-        return true;
+        await ValidateRequest(request);
+        return Success(true);
     }
 }

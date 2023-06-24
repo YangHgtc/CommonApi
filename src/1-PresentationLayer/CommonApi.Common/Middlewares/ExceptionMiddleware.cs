@@ -1,12 +1,21 @@
 using System.Net;
 using System.Text.Json;
+using CommonApi.Common.Common;
 using CommonApi.Util;
-using Serilog;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
-namespace CommonApi.Api.Middlewares;
+namespace CommonApi.Common.Middlewares;
 
-public sealed class MyExceptionMiddleware : IMiddleware
+public sealed class ExceptionMiddleware : IMiddleware
 {
+    private readonly ILogger<ExceptionMiddleware> _logger;
+
+    public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -15,6 +24,7 @@ public sealed class MyExceptionMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
+            _logger.LogError(exception, "发生了异常");
             if (exception.InnerException != null)
             {
                 while (exception.InnerException != null)
@@ -22,39 +32,33 @@ public sealed class MyExceptionMiddleware : IMiddleware
                     exception = exception.InnerException;
                 }
             }
-            var errorResult = new ErrorResult();
+            var errorResult = new ResponseResult<bool>() { Code = (int)ResponseStatusCode.Fail };
             if (exception is FluentValidation.ValidationException fluentException)
             {
-                foreach (var error in fluentException.Errors)
-                {
-                    errorResult.Messages.Add(error.ErrorMessage);
-                }
+                var errors = fluentException.Errors.Select(error => error.ErrorMessage);
+                errorResult.Message = string.Join(";", errors);
             }
-
-            errorResult.StatusCode = exception switch
+            else
+            {
+                errorResult.Message = exception.Message;
+            }
+            var response = context.Response;
+            response.StatusCode = exception switch
             {
                 KeyNotFoundException => (int)HttpStatusCode.NotFound,
                 FluentValidation.ValidationException => (int)HttpStatusCode.BadRequest,
                 _ => (int)HttpStatusCode.InternalServerError,
             };
-            var response = context.Response;
+
             if (!response.HasStarted)
             {
                 response.ContentType = "application/json";
-                response.StatusCode = errorResult.StatusCode;
                 await response.WriteAsync(JsonSerializer.Serialize(errorResult, JsonHelper.jsonSerializerOptions));
             }
             else
             {
-                Log.Warning("Can't write error response. Response has already started.");
+                _logger.LogWarning("Can't write error response. Response has already started.");
             }
         }
-    }
-
-    public sealed class ErrorResult
-    {
-        public int StatusCode { get; set; }
-
-        public List<string> Messages { get; set; } = new();
     }
 }
