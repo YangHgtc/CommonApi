@@ -1,2 +1,2 @@
 # CommonApi
-通用webapi
+基于单体架构的Asp.net Core Webapi
