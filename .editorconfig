@@ -13,7 +13,7 @@ indent_style = space
 indent_size = 4
 insert_final_newline = true
 charset = utf-8
-
+end_of_line = crlf
 # XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
 indent_size = 2
@@ -232,11 +232,9 @@ csharp_preserve_single_line_statements = true
 # warning RS0037: PublicAPI.txt is missing '#nullable enable'
 dotnet_diagnostic.RS0037.severity = none
 
-[src/CodeStyle/**.{cs,vb}]
+[*.{cs,vb}]
 # warning RS0005: Do not use generic CodeAction.Create to create CodeAction
 dotnet_diagnostic.RS0005.severity = none
-
-[src/{Analyzers,CodeStyle,Features,Workspaces,EditorFeatures, VisualStudio}/**/*.{cs,vb}]
 
 # IDE0011: Add braces
 csharp_prefer_braces = when_multiline:warning
@@ -244,7 +242,7 @@ csharp_prefer_braces = when_multiline:warning
 dotnet_diagnostic.IDE0011.severity = warning
 
 # IDE0040: Add accessibility modifiers
-dotnet_diagnostic.IDE0040.severity = warning
+dotnet_diagnostic.IDE0040.severity = error
 
 # CONSIDER: Are IDE0051 and IDE0052 too noisy to be warnings for IDE editing scenarios? Should they be made build-only warnings?
 # IDE0051: Remove unused private member
@@ -259,6 +257,9 @@ dotnet_diagnostic.IDE0059.severity = warning
 # IDE0060: Remove unused parameter
 dotnet_diagnostic.IDE0060.severity = warning
 
+# IDE1006: Class Name must begin with upper case characters
+dotnet_diagnostic.IDE1006.severity = error
+
 # CA1822: Make member static
 dotnet_diagnostic.CA1822.severity = warning
 
@@ -268,7 +269,6 @@ csharp_style_var_for_built_in_types = true:warning
 csharp_style_var_when_type_is_apparent = true:warning
 csharp_style_var_elsewhere = true:warning
 
-[src/{VisualStudio}/**/*.{cs,vb}]
 # CA1822: Make member static
 # Not enforced as a build 'warning' for 'VisualStudio' layer due to large number of false positives from https://github.com/dotnet/roslyn-analyzers/issues/3857 and https://github.com/dotnet/roslyn-analyzers/issues/3858
 # Additionally, there is a risk of accidentally breaking an internal API that partners rely on though IVT.
