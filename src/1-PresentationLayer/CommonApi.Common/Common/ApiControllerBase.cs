@@ -9,7 +9,12 @@ public abstract class ApiControllerBase : ControllerBase
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public ApiControllerBase(IServiceProvider serviceProvider)
+    protected ApiControllerBase()
+    {
+        
+    }
+
+    protected ApiControllerBase(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }

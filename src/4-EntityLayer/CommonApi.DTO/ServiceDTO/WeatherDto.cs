@@ -1,6 +1,6 @@
-namespace CommonApi.DTO.Responses;
+﻿namespace CommonApi.DTO.ServiceDTO;
 
-public sealed class WeatherResponse
+public sealed class WeatherDto
 {
     public DateTime Date { get; set; }
 
@@ -10,4 +10,3 @@ public sealed class WeatherResponse
 
     public string? Summary { get; set; }
 }
-

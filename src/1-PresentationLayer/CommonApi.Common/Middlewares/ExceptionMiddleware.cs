@@ -2,11 +2,14 @@ using System.Net;
 using System.Text.Json;
 using CommonApi.Common.Common;
 using CommonApi.Util;
+using CommonApi.Util.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace CommonApi.Common.Middlewares;
-
+/// <summary>
+/// 异常处理中间件
+/// </summary>
 public sealed class ExceptionMiddleware : IMiddleware
 {
     private readonly ILogger<ExceptionMiddleware> _logger;
@@ -53,7 +56,7 @@ public sealed class ExceptionMiddleware : IMiddleware
             if (!response.HasStarted)
             {
                 response.ContentType = "application/json";
-                await response.WriteAsync(JsonSerializer.Serialize(errorResult, JsonHelper.jsonSerializerOptions));
+                await response.WriteAsync(JsonSerializer.Serialize(errorResult, JsonHelper.JsonOptions));
             }
             else
             {

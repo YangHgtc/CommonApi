@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+
 namespace CommonApi.Api.Controllers;
 
 using CommonApi.Business.IServices;
@@ -7,8 +9,9 @@ using CommonApi.DTO.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 /// <summary>
-///
+/// 
 /// </summary>
+[Authorize]
 public class WeatherForecastController : ApiControllerBase
 {
     private readonly ILogger<WeatherForecastController> _logger;
