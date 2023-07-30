@@ -10,7 +10,7 @@ public static class JsonHelper
     /// <summary>
     /// 通用system.text.json序列化选项
     /// </summary>
-    public static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions()
+    public static readonly JsonSerializerOptions JsonOptions = new()
     {
         // 整齐打印
         WriteIndented = true,
@@ -54,7 +54,7 @@ public sealed class DateTimeConverter : JsonConverter<DateTime>
 
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value.ToString("yyyy-MM-dd HH:mm:ss"));
+        writer.WriteStringValue(value.ToString(TimeHelper.DateTimeFormatter));
     }
 }
 
@@ -67,6 +67,6 @@ public sealed class DateTimeNullableConverter : JsonConverter<DateTime?>
 
     public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value?.ToString("yyyy-MM-dd HH:mm:ss"));
+        writer.WriteStringValue(value?.ToString(TimeHelper.DateTimeFormatter));
     }
 }

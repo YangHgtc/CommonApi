@@ -1,10 +1,10 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using CommonApi.Util.Helpers;
 
 namespace CommonApi.Util.Extensions;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public static class ObjectExtension
 {
@@ -14,7 +14,7 @@ public static class ObjectExtension
     /// <param name="obj"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static string Serialize<T>(this object obj)
+    public static string Serialize<T>(this T obj)
     {
         return JsonSerializer.Serialize(obj, JsonHelper.JsonOptions);
     }
@@ -27,6 +27,6 @@ public static class ObjectExtension
     /// <returns></returns>
     public static T? DeSerialize<T>(this string str)
     {
-        return JsonSerializer.Deserialize<T>(str);
+        return JsonSerializer.Deserialize<T>(str, JsonHelper.JsonOptions);
     }
 }

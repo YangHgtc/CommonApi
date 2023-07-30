@@ -7,6 +7,14 @@
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
+  <Target Name="CopyDocumentationFiles" AfterTargets="build">
+    <ItemGroup>
+      <DocumentationFiles Include="$(OutputPath)\**\*.xml" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(OutputPath)\Documentation" SkipUnchangedFiles="true" />
+  </Target>
+
+
   <ItemGroup>
     <ProjectReference Include="..\CommonApi.Common\CommonApi.Common.csproj" />
   </ItemGroup>

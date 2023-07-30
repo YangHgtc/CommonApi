@@ -1,9 +1,9 @@
-﻿namespace CommonApi.Util.Helpers;
+namespace CommonApi.Util.Helpers;
 
 public static class TimeHelper
 {
     public const string Today = nameof(Today);
-    public const string Week  = nameof(Week);
+    public const string Week = nameof(Week);
     public const string Month = nameof(Month);
 
     /// <summary>

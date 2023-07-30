@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using CommonApi.Common.Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,14 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CommonApi.Common.Extensions;
+
 /// <summary>
 /// JWT扩展
 /// </summary>
 public static class JwtExtensions
 {
-
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="services"></param>
     /// <param name="jwtOptions"></param>

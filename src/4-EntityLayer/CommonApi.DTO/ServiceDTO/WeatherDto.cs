@@ -1,4 +1,4 @@
-﻿namespace CommonApi.DTO.ServiceDTO;
+namespace CommonApi.DTO.ServiceDTO;
 
 public sealed class WeatherDto
 {

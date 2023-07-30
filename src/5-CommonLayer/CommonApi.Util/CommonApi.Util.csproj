@@ -5,4 +5,9 @@
 
 
 
+  <ItemGroup>
+    <PackageReference Include="Enums.NET" Version="4.0.1" />
+    <PackageReference Include="ZString" Version="2.5.0" />
+  </ItemGroup>
+
 </Project>

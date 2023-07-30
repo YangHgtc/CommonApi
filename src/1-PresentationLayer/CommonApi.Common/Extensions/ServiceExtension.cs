@@ -22,7 +22,7 @@ public static class ServiceExtension
     /// <param name="services"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public static IServiceCollection AddServices(this IServiceCollection services,IConfiguration config)
+    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddMiddlewares()
                 .AddRepository()
@@ -38,14 +38,14 @@ public static class ServiceExtension
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    private static IServiceCollection AddMiddlewares(this IServiceCollection services)
+    public static IServiceCollection AddMiddlewares(this IServiceCollection services)
     {
         services.Scan(scan =>
         {
             scan.FromAssemblyOf<ApiControllerBase>()
-            .AddClasses(x => x.Where(y => y.Namespace!.Contains("Middlewares", StringComparison.OrdinalIgnoreCase)))
-            .AsSelf()
-            .WithSingletonLifetime();
+                .AddClasses(x => x.Where(y => y.Namespace!.Contains("Middlewares", StringComparison.OrdinalIgnoreCase)))
+                .AsSelf()
+                .WithSingletonLifetime();
         });
         return services;
     }
@@ -55,10 +55,9 @@ public static class ServiceExtension
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    private static IServiceCollection AddValidation(this IServiceCollection services)
+    public static IServiceCollection AddValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<ValidationForScrutor>();
-        //.AddFluentValidationAutoValidation();
+        services.AddValidatorsFromAssemblyContaining<ValidationForInjection>(ServiceLifetime.Singleton);
         return services;
     }
 
@@ -67,16 +66,9 @@ public static class ServiceExtension
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    private static IServiceCollection AddBusiness(this IServiceCollection services)
+    public static IServiceCollection AddBusiness(this IServiceCollection services)
     {
-        services.Scan(scan =>
-        {
-            scan.FromAssemblyOf<BusinessForScrutor>()
-            .AddClasses()
-            .AsMatchingInterface()
-            .WithScopedLifetime();
-        });
-        return services;
+        return services.RegisterScopedByScanAssembly<BusinessForInjection>();
     }
 
     /// <summary>
@@ -84,25 +76,18 @@ public static class ServiceExtension
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    private static IServiceCollection AddRepository(this IServiceCollection services)
+    public static IServiceCollection AddRepository(this IServiceCollection services)
     {
-        services.Scan(scan =>
-        {
-            scan.FromAssemblyOf<RepositoryForInjection>()
-            .AddClasses()
-            .AsMatchingInterface()
-            .WithScopedLifetime();
-        });
-        return services;
+        return services.RegisterScopedByScanAssembly<RepositoryForInjection>();
     }
-    
+
     /// <summary>
     /// 注册jwt
     /// </summary>
     /// <param name="services"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    private static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration config)
     {
         var jwtOption = config.GetSection(JwtOptions.Position);
         ArgumentNullException.ThrowIfNull(jwtOption, nameof(jwtOption));
@@ -111,7 +96,7 @@ public static class ServiceExtension
         services.AddJwtAuthentication(jwtOption.Get<JwtOptions>());
         return services;
     }
-    
+
     /// <summary>
     /// 注册dapper
     /// </summary>
@@ -129,7 +114,7 @@ public static class ServiceExtension
         ColumnMapper.FindCustomAttributesPropertyInfo(assembly, assembly.GetName().Name);
         return services;
     }
-    
+
     /// <summary>
     /// 注册mapper
     /// </summary>

@@ -1,18 +1,16 @@
-using Microsoft.AspNetCore.Authorization;
-
-namespace CommonApi.Api.Controllers;
-
 using CommonApi.Business.IServices;
 using CommonApi.Common.Common;
 using CommonApi.DTO.Requests;
 using CommonApi.DTO.Responses;
 using Microsoft.AspNetCore.Mvc;
 
+namespace CommonApi.Api.Controllers;
+
 /// <summary>
-/// 
+/// 天气接口
 /// </summary>
-[Authorize]
-public class WeatherForecastController : ApiControllerBase
+//[Authorize]
+public class WeatherForecastController : ValidateControllerBase
 {
     private readonly ILogger<WeatherForecastController> _logger;
     private readonly IWeatherService _weatherService;
@@ -31,6 +29,9 @@ public class WeatherForecastController : ApiControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ResponseResult<bool>), 400)]
+    [ProducesResponseType(500)]
     public ResponseResult<IEnumerable<WeatherResponse>> GetWeatherForecast()
     {
         _logger.LogDebug("");

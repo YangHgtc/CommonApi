@@ -1,4 +1,4 @@
-﻿using CommonApi.DTO.Responses;
+using CommonApi.DTO.Responses;
 using CommonApi.DTO.ServiceDTO;
 using Mapster;
 
@@ -15,4 +15,3 @@ public sealed class WeatherMapper : IRegister
             .Map(dest => dest.TemperatureF, src => 32 + (int)(src.TemperatureC / 0.5556));
     }
 }
-

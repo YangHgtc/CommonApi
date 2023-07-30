@@ -10,4 +10,3 @@ public sealed class WeatherResponse
 
     public string? Summary { get; set; }
 }
-

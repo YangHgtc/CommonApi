@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -40,15 +40,17 @@ public sealed class JwtService : IJwtService
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);//使用该方法转换为字符串形式的jwt token返回
     }
 }
+
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class JwtOptions
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public const string Position = "JWT";
+
     /// <summary>
     /// 签发者
     /// </summary>
@@ -69,4 +71,3 @@ public sealed class JwtOptions
     /// </summary>
     public int ExpireSeconds { get; set; }
 }
-

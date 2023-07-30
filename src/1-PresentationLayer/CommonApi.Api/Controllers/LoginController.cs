@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using CommonApi.Common.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,9 +6,8 @@ using Microsoft.Extensions.Options;
 
 namespace CommonApi.Api.Controllers;
 
-
 /// <summary>
-///
+/// 登录接口
 /// </summary>
 public sealed class LoginController : ApiControllerBase
 {
@@ -16,7 +15,7 @@ public sealed class LoginController : ApiControllerBase
     private readonly IOptions<JwtOptions> _options;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="jwtService"></param>
     /// <param name="options"></param>
@@ -27,7 +26,7 @@ public sealed class LoginController : ApiControllerBase
     }
 
     /// <summary>
-    /// 
+    /// 获取token
     /// </summary>
     /// <returns></returns>
     [AllowAnonymous, HttpGet]

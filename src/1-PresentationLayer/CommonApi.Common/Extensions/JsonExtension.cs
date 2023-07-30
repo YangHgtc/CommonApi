@@ -2,14 +2,13 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
-using CommonApi.Util;
 using CommonApi.Util.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommonApi.Common.Extensions;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public static class JsonExtension
 {

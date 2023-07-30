@@ -1,3 +1,3 @@
-﻿namespace CommonApi.Entity;
+namespace CommonApi.Entity;
 
 public sealed record EntityForInjection;

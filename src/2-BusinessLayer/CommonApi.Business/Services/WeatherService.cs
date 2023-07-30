@@ -11,7 +11,7 @@ public sealed class WeatherService : IWeatherService
     private readonly IWeatherRepository _weatherRepository;
     private readonly IMapper _mapper;
 
-    public WeatherService(IWeatherRepository weatherRepository,  IMapper mapper)
+    public WeatherService(IWeatherRepository weatherRepository, IMapper mapper)
     {
         _weatherRepository = weatherRepository;
         _mapper = mapper;
@@ -21,11 +21,11 @@ public sealed class WeatherService : IWeatherService
     {
         var summaries = _weatherRepository.GetSummaries();
         var arr = Enumerable.Range(1, 5).Select(index => new WeatherDto
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = summaries[Random.Shared.Next(summaries.Length)]
-            })
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = summaries[Random.Shared.Next(summaries.Length)]
+        })
             .ToArray();
         return _mapper.Map<WeatherResponse[]>(arr);
     }

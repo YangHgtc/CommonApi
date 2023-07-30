@@ -14,11 +14,10 @@ builder.Services.AddSwagger();
 builder.Services.AddServices(config);
 builder.Services.AddMyCors();
 var app = builder.Build();
+Log.Information(app.Environment.EnvironmentName);
 if (app.Environment.IsDevelopment())
 {
-    Log.Information(app.Environment.EnvironmentName);
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseMySwaager();
 }
 app.UseSerilogRequestLogging();
 app.UseMiddleware<ExceptionMiddleware>();
@@ -26,6 +25,6 @@ app.UseRouting();
 app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<RequestResponseLoggerMiddleware>();
 app.MapControllers();
-
 app.Run();

@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 
 namespace CommonApi.DataBase.Dapper;
 
@@ -92,4 +92,13 @@ public interface IDapperHelperAsync
     /// <param name="strSql"></param>
     /// <returns></returns>
     Task<int> ExecuteTransactionAsync(string strSql);
+
+    /// <summary>
+    /// 分页查询
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="searchSql">查询的sql语句</param>
+    /// <param name="countSql">查询总数的sql语句</param>
+    /// <returns></returns>
+    Task<(long, List<T>)> QueryPaginationAsync<T>(string searchSql, string countSql);
 }

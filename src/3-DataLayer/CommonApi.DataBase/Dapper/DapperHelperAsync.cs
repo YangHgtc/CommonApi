@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Dapper;
 
 namespace CommonApi.DataBase.Dapper;
@@ -191,5 +191,21 @@ public sealed class DapperHelperAsync : IDapperHelperAsync
 
             throw;
         }
+    }
+
+    /// <summary>
+    /// 分页查询
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="searchSql"></param>
+    /// <param name="countSql"></param>
+    /// <returns></returns>
+    public async Task<(long, List<T>)> QueryPaginationAsync<T>(string searchSql, string countSql)
+    {
+        using var conn = await _dbConnectionFactory.CreateConnectionAsync();
+        using var res = await conn.QueryMultipleAsync(countSql + searchSql);
+        var total = await res.ReadFirstAsync<long>();
+        var data = (await res.ReadAsync<T>()).ToList();
+        return (total, data);
     }
 }
