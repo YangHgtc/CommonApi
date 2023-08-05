@@ -24,29 +24,11 @@ public static class ServiceExtension
     /// <returns></returns>
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddMiddlewares()
-                .AddRepository()
+        services.AddRepository()
                 .AddBusiness()
                 .AddValidation()
                 .AddMapper()
                 .AddJwt(config);
-        return services;
-    }
-
-    /// <summary>
-    /// 注入中间件
-    /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddMiddlewares(this IServiceCollection services)
-    {
-        services.Scan(scan =>
-        {
-            scan.FromAssemblyOf<ApiControllerBase>()
-                .AddClasses(x => x.Where(y => y.Namespace!.Contains("Middlewares", StringComparison.OrdinalIgnoreCase)))
-                .AsSelf()
-                .WithSingletonLifetime();
-        });
         return services;
     }
 

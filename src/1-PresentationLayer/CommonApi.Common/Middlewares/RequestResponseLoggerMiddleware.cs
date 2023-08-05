@@ -8,7 +8,7 @@ namespace CommonApi.Common.Middlewares
     /// <summary>
     /// 请求响应中间件
     /// </summary>
-    public sealed class RequestResponseLoggerMiddleware : IMiddleware
+    public sealed class RequestResponseLoggerMiddleware
     {
         /// <summary>
         /// 是否启用记录请求和响应
@@ -20,22 +20,25 @@ namespace CommonApi.Common.Middlewares
         /// </summary>
         private readonly ILogger<RequestResponseLoggerMiddleware> _logger;
 
+        private readonly RequestDelegate _next;
+
         /// <summary>
         /// 可重用MemoryStream
         /// </summary>
         private readonly RecyclableMemoryStreamManager _manager = new();
 
-        public RequestResponseLoggerMiddleware(IConfiguration config, ILogger<RequestResponseLoggerMiddleware> logger)
+        public RequestResponseLoggerMiddleware(IConfiguration config, ILogger<RequestResponseLoggerMiddleware> logger, RequestDelegate next)
         {
             _isRequestResponseLoggingEnabled = config.GetValue("EnableRequestResponseLogging", false);
             _logger = logger;
+            _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             if (!_isRequestResponseLoggingEnabled)
             {
-                await next(httpContext);
+                await _next(httpContext);
                 return;
             }
             // Middleware is enabled only when the EnableRequestResponseLogging config value is set.
@@ -58,7 +61,7 @@ namespace CommonApi.Common.Middlewares
             var originalResponseBody = httpContext.Response.Body;
             using var newResponseBody = _manager.GetStream();
             httpContext.Response.Body = newResponseBody;
-            await next(httpContext);
+            await _next(httpContext);
             if (newResponseBody.CanRead && newResponseBody.CanSeek)
             {
                 newResponseBody.Seek(0, SeekOrigin.Begin);
