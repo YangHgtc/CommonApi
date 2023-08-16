@@ -4,25 +4,19 @@ using Dapper;
 
 namespace CommonApi.DataBase.Dapper;
 
-public sealed class ColumnAttributeTypeMapper<T> : FallbackTypeMapper
+public sealed class ColumnAttributeTypeMapper<T>() : FallbackTypeMapper(new SqlMapper.ITypeMap[]
 {
-    public ColumnAttributeTypeMapper()
-        : base(new SqlMapper.ITypeMap[]
-        {
-            new CustomPropertyTypeMap(
-                typeof(T),
-                (type, columnName) =>
-                    type.GetProperties().FirstOrDefault(prop =>
-                        prop.GetCustomAttributes(false)
-                            .OfType<ColumnAttribute>()
-                            .Any(attr => attr.Name == columnName)
-                    )
-            ),
-            new DefaultTypeMap(typeof(T))
-        })
-    {
-    }
-}
+    new CustomPropertyTypeMap(
+        typeof(T),
+        (type, columnName) =>
+            type.GetProperties().FirstOrDefault(prop =>
+                prop.GetCustomAttributes(false)
+                    .OfType<ColumnAttribute>()
+                    .Any(attr => attr.Name == columnName)
+            )
+    ),
+    new DefaultTypeMap(typeof(T))
+});
 
 /// <summary>
 /// 我自定义的映射
@@ -60,18 +54,11 @@ public sealed class ColumnAttributeTypeMapper : FallbackTypeMapper
     }
 }
 
-public class FallbackTypeMapper : SqlMapper.ITypeMap
+public class FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers) : SqlMapper.ITypeMap
 {
-    private readonly IEnumerable<SqlMapper.ITypeMap> _mappers;
-
-    public FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers)
-    {
-        _mappers = mappers;
-    }
-
     public ConstructorInfo FindConstructor(string[] names, Type[] types)
     {
-        foreach (var mapper in _mappers)
+        foreach (var mapper in mappers)
         {
             try
             {
@@ -91,7 +78,7 @@ public class FallbackTypeMapper : SqlMapper.ITypeMap
 
     public SqlMapper.IMemberMap GetConstructorParameter(ConstructorInfo constructor, string columnName)
     {
-        foreach (var mapper in _mappers)
+        foreach (var mapper in mappers)
         {
             try
             {
@@ -111,7 +98,7 @@ public class FallbackTypeMapper : SqlMapper.ITypeMap
 
     public SqlMapper.IMemberMap GetMember(string columnName)
     {
-        foreach (var mapper in _mappers)
+        foreach (var mapper in mappers)
         {
             try
             {
@@ -131,7 +118,7 @@ public class FallbackTypeMapper : SqlMapper.ITypeMap
 
     public ConstructorInfo FindExplicitConstructor()
     {
-        return _mappers
+        return mappers
             .Select(mapper => mapper.FindExplicitConstructor())
             .FirstOrDefault(result => result != null);
     }

@@ -38,6 +38,6 @@ public static class EnumExtension
     /// <returns></returns>
     public static string GetDescriptionFast<TEnum>(this TEnum value) where TEnum : struct, Enum
     {
-        return value.GetMember().Attributes.Get<DescriptionAttribute>().Description;
+        return value.GetMember()!.Attributes.Get<DescriptionAttribute>()!.Description;
     }
 }

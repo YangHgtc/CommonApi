@@ -6,20 +6,11 @@ using MapsterMapper;
 
 namespace CommonApi.Business.Services;
 
-public sealed class WeatherService : IWeatherService
+public sealed class WeatherService(IWeatherRepository weatherRepository, IMapper mapper) : IWeatherService
 {
-    private readonly IWeatherRepository _weatherRepository;
-    private readonly IMapper _mapper;
-
-    public WeatherService(IWeatherRepository weatherRepository, IMapper mapper)
-    {
-        _weatherRepository = weatherRepository;
-        _mapper = mapper;
-    }
-
     public IEnumerable<WeatherResponse> GetWeather()
     {
-        var summaries = _weatherRepository.GetSummaries();
+        var summaries = weatherRepository.GetSummaries();
         var arr = Enumerable.Range(1, 5).Select(index => new WeatherDto
         {
             Date = DateTime.Now.AddDays(index),
@@ -27,6 +18,6 @@ public sealed class WeatherService : IWeatherService
             Summary = summaries[Random.Shared.Next(summaries.Length)]
         })
             .ToArray();
-        return _mapper.Map<WeatherResponse[]>(arr);
+        return mapper.Map<WeatherResponse[]>(arr);
     }
 }

@@ -9,26 +9,37 @@ namespace CommonApi.Common.Middlewares;
 /// <summary>
 /// 异常处理中间件
 /// </summary>
-public sealed class ExceptionMiddleware
+/// <param name="logger">日志</param>
+/// <param name="next">委托中间件</param>
+/// <remarks>
+/// <example>
+/// 中间件采用约定的方式编写,具体示例如下
+/// <code>
+/// public sealed class CustomMiddleware(RequestDelegate next)
+/// {
+///      public async Task InvokeAsync(HttpContext context)
+///      {
+///         await next(context);
+///      }
+/// }
+/// </code>
+/// </example>
+/// </remarks>
+public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, RequestDelegate next)
 {
-    private readonly ILogger<ExceptionMiddleware> _logger;
-    private readonly RequestDelegate _next;
-
-    public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, RequestDelegate next)
-    {
-        _logger = logger;
-        _next = next;
-    }
-
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="context"></param>
     public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "发生了异常");
+            logger.LogError(exception, "发生了异常");
             await HandleException(context, exception);
         }
     }
@@ -75,7 +86,7 @@ public sealed class ExceptionMiddleware
         }
         else
         {
-            _logger.LogWarning("Can't write error response. Response has already started.");
+            logger.LogWarning("Can't write error response. Response has already started.");
         }
     }
 }

@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CommonApi.Common.Extensions;
 
+/// <summary>
+/// 
+/// </summary>
 public static class ServiceExtension
 {
     /// <summary>
@@ -75,7 +78,7 @@ public static class ServiceExtension
         ArgumentNullException.ThrowIfNull(jwtOption, nameof(jwtOption));
         services.AddOptions<JwtOptions>().Bind(jwtOption);
         services.AddScoped<IJwtService, JwtService>();
-        services.AddJwtAuthentication(jwtOption.Get<JwtOptions>());
+        services.AddJwtAuthentication(jwtOption.Get<JwtOptions>()!);
         return services;
     }
 
@@ -93,7 +96,7 @@ public static class ServiceExtension
         services.AddSingleton<IDapperHelperAsync, DapperHelperAsync>();
         //添加dapper实体类
         var assembly = typeof(EntityForInjection).Assembly;
-        ColumnMapper.FindCustomAttributesPropertyInfo(assembly, assembly.GetName().Name);
+        ColumnMapper.FindCustomAttributesPropertyInfo(assembly, assembly.GetName().Name!);
         return services;
     }
 

@@ -31,7 +31,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonApi.Validation", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonApi.Mapper", "src\3-DataLayer\CommonApi.Mapper\CommonApi.Mapper.csproj", "{A89CEDAA-81CA-4DFD-85CA-638606DE7797}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonApi.Common", "src\1-PresentationLayer\CommonApi.Common\CommonApi.Common.csproj", "{5C055A2F-AF83-41E1-B9E4-FA72A478C970}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonApi.Common", "src\1-PresentationLayer\CommonApi.Common\CommonApi.Common.csproj", "{5C055A2F-AF83-41E1-B9E4-FA72A478C970}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Soultion Items", "Soultion Items", "{3C6CD9F0-E739-44ED-B7B7-F54CBA1574B2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,20 +10,11 @@ namespace CommonApi.Api.Controllers;
 /// 天气接口
 /// </summary>
 //[Authorize]
-public class WeatherForecastController : ValidateControllerBase
-{
-    private readonly ILogger<WeatherForecastController> _logger;
-    private readonly IWeatherService _weatherService;
-
-    public WeatherForecastController(
-        ILogger<WeatherForecastController> logger,
+public class WeatherForecastController(ILogger<WeatherForecastController> logger,
         IWeatherService weatherService,
-        IServiceProvider serviceProvider) : base(serviceProvider)
-    {
-        _logger = logger;
-        _weatherService = weatherService;
-    }
-
+        IServiceProvider serviceProvider)
+    : ValidateControllerBase(serviceProvider)
+{
     /// <summary>
     /// 获取天气
     /// </summary>
@@ -34,8 +25,8 @@ public class WeatherForecastController : ValidateControllerBase
     [ProducesResponseType(500)]
     public ResponseResult<IEnumerable<WeatherResponse>> GetWeatherForecast()
     {
-        _logger.LogDebug("");
-        var res = _weatherService.GetWeather();
+        logger.LogDebug("");
+        var res = weatherService.GetWeather();
         return Success(res);
     }
 

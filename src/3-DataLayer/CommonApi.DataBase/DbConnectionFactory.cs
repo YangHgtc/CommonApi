@@ -8,18 +8,11 @@ public interface IDbConnectionFactory
     public Task<IDbConnection> CreateConnectionAsync();
 }
 
-public sealed class MysqlConnectionFactory : IDbConnectionFactory
+public sealed class MysqlConnectionFactory(string connectionString) : IDbConnectionFactory
 {
-    private readonly string _connectionString;
-
-    public MysqlConnectionFactory(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
     public async Task<IDbConnection> CreateConnectionAsync()
     {
-        var connection = new MySqlConnection(_connectionString);
+        var connection = new MySqlConnection(connectionString);
         await connection.OpenAsync();
         return connection;
     }

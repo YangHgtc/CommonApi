@@ -12,11 +12,11 @@ public static class ObjectExtension
     ///  序列化对象
     /// </summary>
     /// <param name="obj"></param>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T"><paramref name="obj"/></typeparam>
     /// <returns></returns>
-    public static string Serialize<T>(this T obj)
+    public static string Serialize<T>(this T? obj)
     {
-        return JsonSerializer.Serialize(obj, JsonHelper.JsonOptions);
+        return obj is null ? "null" : JsonSerializer.Serialize(obj, JsonHelper.JsonOptions);
     }
 
     /// <summary>
@@ -27,6 +27,6 @@ public static class ObjectExtension
     /// <returns></returns>
     public static T? DeSerialize<T>(this string str)
     {
-        return JsonSerializer.Deserialize<T>(str, JsonHelper.JsonOptions);
+        return string.IsNullOrEmpty(str) ? default : JsonSerializer.Deserialize<T>(str, JsonHelper.JsonOptions);
     }
 }
