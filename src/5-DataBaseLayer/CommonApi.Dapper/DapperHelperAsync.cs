@@ -1,43 +1,37 @@
 using System.Data;
+using CommonApi.DataBase.Contracts;
 using Dapper;
 
-namespace CommonApi.DataBase.Dapper;
+namespace CommonApi.Dapper;
 
-public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) : IDapperHelperAsync
+public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : IDapperHelper
 {
-    /// <summary>
-    /// 获取数据库连接，注意使用using释放连接
-    /// </summary>
-    /// <returns></returns>
-    public async Task<IDbConnection> GetSqlConnection()
-    {
-        return await dbConnectionFactory.CreateConnectionAsync();
-    }
+    protected IDbConnectionFactory DefaultDbConnectionFactory { get; set; } = dbConnectionFactory;
 
     /// <summary>
     ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="strSql"></param>
-    /// <param name="parm"></param>
+    /// <param name="param"></param>
     /// <returns></returns>
-    public async Task<List<T>> QueryAsync<T>(string strSql, object? parm = null)
+    public async Task<List<T>> QueryListAsync<T>(string strSql, object? param = null)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
-        var result = await conn.QueryAsync<T>(strSql, parm);
-        return result.ToList();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        var result = await conn.QueryAsync<T>(strSql, param);
+        return result.AsList();
     }
 
     /// <summary>
     /// 执行SQL返回一个对象
     /// </summary>
     /// <param name="strSql">SQL语句</param>
-    /// <param name="parm"></param>
+    /// <param name="param"></param>
     /// <returns></returns>
-    public async Task<T> QueryFirstOrDefaultAsync<T>(string strSql, object? parm = null)
+    public async Task<T> QueryFirstOrDefaultAsync<T>(string strSql, object? param = null)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
-        return await conn.QueryFirstOrDefaultAsync<T>(strSql, parm);
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        return await conn.QueryFirstOrDefaultAsync<T>(strSql, param);
     }
 
     /// <summary>
@@ -45,12 +39,12 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="sql"></param>
-    /// <param name="parms"></param>
+    /// <param name="param"></param>
     /// <returns></returns>
-    public async Task<T> QueryScalarAsync<T>(string sql, object? parms = null)
+    public async Task<T> QueryScalarAsync<T>(string sql, object? param = null)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
-        return await conn.ExecuteScalarAsync<T>(sql, parms);
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        return await conn.ExecuteScalarAsync<T>(sql, param);
     }
 
     /// <summary>
@@ -61,7 +55,7 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <returns>，0执行失败</returns>
     public async Task<int> ExecuteAsync(string strSql, object? param = null)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
         return await conn.ExecuteAsync(strSql, param);
     }
 
@@ -74,7 +68,7 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <returns>0执行失败</returns>
     public async Task<int> ExecuteAsync(string strSql, IDbTransaction trans, object? param = null)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
         return await conn.ExecuteAsync(strSql, param, trans);
     }
 
@@ -86,7 +80,7 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <returns></returns>
     public async Task<int> ExecuteStoredProcedureAsync(string strProcedure, object? param = null)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
         return await conn.ExecuteAsync(strProcedure, param, null, null, CommandType.StoredProcedure);
     }
 
@@ -99,7 +93,7 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <returns></returns>
     public async Task<List<T>> ExecuteFuncToListAsync<T>(string funcName, object obj)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
 
         var result = await conn.QueryAsync<T>(funcName, obj, commandType: CommandType.StoredProcedure);
         return result.ToList();
@@ -114,7 +108,7 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <returns></returns>
     public async Task<T> ExecuteFuncAsync<T>(string funcName, object obj)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
 
         return await conn.QueryFirstOrDefaultAsync<T>(funcName, obj, commandType: CommandType.StoredProcedure);
     }
@@ -126,11 +120,12 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <returns></returns>
     public async Task<int> ExecuteTransactionAsync(string strSql)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
         IDbTransaction trans = null;
         try
         {
-            trans = conn.BeginTransaction();
+            await conn.OpenAsync();
+            trans = await conn.BeginTransactionAsync();
 
             var iResult = await conn.ExecuteAsync(strSql, trans);
             if (iResult > 0)
@@ -149,6 +144,10 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
             trans?.Rollback();
             return -1;
         }
+        finally
+        {
+            await conn.CloseAsync();
+        }
     }
 
     /// <summary>
@@ -158,12 +157,12 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <returns></returns>
     public async Task<bool> ExecuteFuncAsync(Func<IDbTransaction, IDbConnection, Task<int>> func)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
         IDbTransaction trans = null;
         try
         {
-            conn.Open();
-            trans = conn.BeginTransaction();
+            await conn.OpenAsync();
+            trans = await conn.BeginTransactionAsync();
             var iResult = await func.Invoke(trans, conn);
 
             if (iResult > 0)
@@ -179,10 +178,12 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
         }
         catch (Exception ex)
         {
-            //LogError(ex, "");
             trans?.Rollback();
-
             throw;
+        }
+        finally
+        {
+            await conn.CloseAsync();
         }
     }
 
@@ -193,12 +194,12 @@ public sealed class DapperHelperAsync(IDbConnectionFactory dbConnectionFactory) 
     /// <param name="searchSql"></param>
     /// <param name="countSql"></param>
     /// <returns></returns>
-    public async Task<(long, List<T>)> QueryPaginationAsync<T>(string searchSql, string countSql)
+    public async Task<(List<T> data, long total)> QueryPaginationAsync<T>(string searchSql, string countSql)
     {
-        using var conn = await dbConnectionFactory.CreateConnectionAsync();
-        await using var res = await conn.QueryMultipleAsync(countSql + searchSql);
-        var total = await res.ReadFirstAsync<long>();
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var res = await conn.QueryMultipleAsync(searchSql + countSql);
         var data = (await res.ReadAsync<T>()).ToList();
-        return (total, data);
+        var total = await res.ReadFirstAsync<long>();
+        return (data, total);
     }
 }

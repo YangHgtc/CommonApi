@@ -14,5 +14,5 @@ public class PaginationResponse<T>
     /// <summary>
     /// 数据
     /// </summary>
-    public IEnumerable<T> Records { get; init; }
+    public required IReadOnlyCollection<T> Records { get; init; } = Array.Empty<T>();
 }

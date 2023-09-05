@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOS\" />
+    <Compile Remove="DTOS\**" />
+    <EmbeddedResource Remove="DTOS\**" />
+    <None Remove="DTOS\**" />
   </ItemGroup>
 
 </Project>

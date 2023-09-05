@@ -17,7 +17,7 @@ public static class JsonExtension
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection AddJsonSetting(this IServiceCollection services)
+    public static IServiceCollection AddMvcControllers(this IServiceCollection services)
     {
         services.AddControllers().AddJsonOptions(json =>
         {

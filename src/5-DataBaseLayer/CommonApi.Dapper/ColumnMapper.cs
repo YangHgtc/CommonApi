@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using Dapper;
 
-namespace CommonApi.DataBase.Dapper;
+namespace CommonApi.Dapper;
 
 /// <summary>
 /// 用于通过反射查找出所有的用到[colmun(Name="")]特性的model，自动增加映射
@@ -17,7 +17,6 @@ public static class ColumnMapper
     public static void RegisterColumnAttributeTypeMapper(string assemblyName, string namespaceName)
     {
         if (!string.IsNullOrWhiteSpace(assemblyName) && !string.IsNullOrWhiteSpace(namespaceName))
-        {
             //二选其一
             //1
             //var typeList = FindCustomAttributesTypes(assemblyName, dataMapperNamespace);
@@ -25,8 +24,6 @@ public static class ColumnMapper
 
             //2
             FindCustomAttributesPropertyInfos(assemblyName, namespaceName);
-            //properties.AsParallel().ForAll(item => SqlMapper.SetTypeMap(item.type, new ColumnAttributeTypeMapper(item.type, item.propertyInfos)));
-        }
     }
 
     /// <summary>
@@ -47,9 +44,7 @@ public static class ColumnMapper
         });
         var findCustomAttributesTypes = types.ToList();
         if (!findCustomAttributesTypes.Any())
-        {
             throw new ArgumentNullException("FindTypes types");
-        }
         return findCustomAttributesTypes;
     }
 
@@ -65,19 +60,15 @@ public static class ColumnMapper
         //ConcurrentBag<(Type type, IEnumerable<PropertyInfo>)> properties = new();
         var assembly = Assembly.Load(assemblyName);
         if (assembly == null)
-        {
             throw new ArgumentNullException("FindTypes assembly");
-        }
         assembly.GetTypes()
         .Where(type => !string.IsNullOrWhiteSpace(type.Namespace) && (type.Namespace.Equals(namespaceName) || type.Namespace.StartsWith(namespaceName + ".")))
         .AsParallel().ForAll(type =>
         {
             var propertyInfoList = type.GetProperties().Where(p => p.GetCustomAttribute(typeof(ColumnAttribute), false) != null);
             if (propertyInfoList.Any())
-            {
                 //properties.Add((type, propertyInfos));
                 SqlMapper.SetTypeMap(type, new ColumnAttributeTypeMapper(type, propertyInfoList));
-            }
         });
         //return properties;
     }
@@ -97,9 +88,7 @@ public static class ColumnMapper
         {
             var propertyInfoList = type.GetProperties().Where(p => p.GetCustomAttribute(typeof(ColumnAttribute), false) != null);
             if (propertyInfoList.Any())
-            {
                 SqlMapper.SetTypeMap(type, new ColumnAttributeTypeMapper(type, propertyInfoList));//SetTypeMap方法内部已经加了锁
-            }
         });
     }
 }

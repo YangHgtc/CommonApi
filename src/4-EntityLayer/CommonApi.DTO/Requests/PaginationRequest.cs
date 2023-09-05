@@ -13,5 +13,5 @@ public class PaginationRequest
     /// <summary>
     /// 每页多少条数据
     /// </summary>
-    public int PageSize { get; init; }
+    public int PageSize { get; init; } = 10;
 }

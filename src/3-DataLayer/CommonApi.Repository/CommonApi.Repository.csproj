@@ -5,7 +5,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\4-EntityLayer\CommonApi.Entity\CommonApi.Entity.csproj" />
-    <ProjectReference Include="..\CommonApi.DataBase\CommonApi.DataBase.csproj" />
+    <ProjectReference Include="..\..\5-DataBaseLayer\CommonApi.Dapper\CommonApi.Dapper.csproj" />
   </ItemGroup>
 
 </Project>

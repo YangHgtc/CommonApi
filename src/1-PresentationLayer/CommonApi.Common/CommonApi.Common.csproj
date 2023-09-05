@@ -21,7 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\2-BusinessLayer\CommonApi.Business\CommonApi.Business.csproj" />
     <ProjectReference Include="..\..\3-DataLayer\CommonApi.Validation\CommonApi.Validation.csproj" />
-    <ProjectReference Include="..\..\5-CommonLayer\CommonApi.Util\CommonApi.Util.csproj" />
+    <ProjectReference Include="..\..\5-DataBaseLayer\CommonApi.Mysql\CommonApi.Mysql.csproj" />
+    <ProjectReference Include="..\..\6-CommonLayer\CommonApi.Util\CommonApi.Util.csproj" />
   </ItemGroup>
   
   <PropertyGroup>

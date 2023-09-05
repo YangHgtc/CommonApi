@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using Dapper;
 
-namespace CommonApi.DataBase.Dapper;
+namespace CommonApi.Dapper;
 
 public sealed class ColumnAttributeTypeMapper<T>() : FallbackTypeMapper(new SqlMapper.ITypeMap[]
 {
@@ -64,9 +64,7 @@ public class FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers) : SqlMa
             {
                 var result = mapper.FindConstructor(names, types);
                 if (result != null)
-                {
                     return result;
-                }
             }
             catch (NotImplementedException)
             {
@@ -84,9 +82,7 @@ public class FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers) : SqlMa
             {
                 var result = mapper.GetConstructorParameter(constructor, columnName);
                 if (result != null)
-                {
                     return result;
-                }
             }
             catch (NotImplementedException)
             {
@@ -104,9 +100,7 @@ public class FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers) : SqlMa
             {
                 var result = mapper.GetMember(columnName);
                 if (result != null)
-                {
                     return result;
-                }
             }
             catch (NotImplementedException)
             {

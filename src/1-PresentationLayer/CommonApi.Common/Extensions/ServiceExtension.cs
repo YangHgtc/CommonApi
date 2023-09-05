@@ -1,9 +1,11 @@
 using CommonApi.Business;
 using CommonApi.Common.Common;
+using CommonApi.Dapper;
 using CommonApi.DataBase;
-using CommonApi.DataBase.Dapper;
+using CommonApi.DataBase.Contracts;
 using CommonApi.Entity;
 using CommonApi.Mapper;
+using CommonApi.Mysql;
 using CommonApi.Repository;
 using CommonApi.Validation;
 using FluentValidation;
@@ -93,7 +95,7 @@ public static class ServiceExtension
         var connection = config.GetValue<string>("ConnectionStrings:DefaultConnection");
         ArgumentNullException.ThrowIfNull(connection, nameof(config));
         services.AddSingleton<IDbConnectionFactory>(_ => new MysqlConnectionFactory(connection));
-        services.AddSingleton<IDapperHelperAsync, DapperHelperAsync>();
+        services.AddSingleton<IDapperHelper, DapperHelper>();
         //添加dapper实体类
         var assembly = typeof(EntityForInjection).Assembly;
         ColumnMapper.FindCustomAttributesPropertyInfo(assembly, assembly.GetName().Name!);

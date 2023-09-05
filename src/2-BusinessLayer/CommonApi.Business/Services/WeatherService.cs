@@ -21,3 +21,4 @@ public sealed class WeatherService(IWeatherRepository weatherRepository, IMapper
         return mapper.Map<WeatherResponse[]>(arr);
     }
 }
+
