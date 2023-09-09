@@ -1,7 +1,6 @@
 using CommonApi.Business;
 using CommonApi.Common.Common;
 using CommonApi.Dapper;
-using CommonApi.DataBase;
 using CommonApi.DataBase.Contracts;
 using CommonApi.Entity;
 using CommonApi.Mapper;
@@ -97,8 +96,7 @@ public static class ServiceExtension
         services.AddSingleton<IDbConnectionFactory>(_ => new MysqlConnectionFactory(connection));
         services.AddSingleton<IDapperHelper, DapperHelper>();
         //添加dapper实体类
-        var assembly = typeof(EntityForInjection).Assembly;
-        ColumnMapper.FindCustomAttributesPropertyInfo(assembly, assembly.GetName().Name!);
+        ColumnMapper.FindCustomAttributesPropertyInfo<EntityForInjection>();
         return services;
     }
 

@@ -9,29 +9,29 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     protected IDbConnectionFactory DefaultDbConnectionFactory { get; set; } = dbConnectionFactory;
 
     /// <summary>
-    ///
+    /// 执行SQL返回一个List
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="strSql"></param>
+    /// <param name="sql"></param>
     /// <param name="param"></param>
     /// <returns></returns>
-    public async Task<List<T>> QueryListAsync<T>(string strSql, object? param = null)
+    public async Task<List<T>> QueryListAsync<T>(string sql, object? param = null)
     {
         await using var conn = DefaultDbConnectionFactory.CreateConnection();
-        var result = await conn.QueryAsync<T>(strSql, param);
+        var result = await conn.QueryAsync<T>(sql, param);
         return result.AsList();
     }
 
     /// <summary>
     /// 执行SQL返回一个对象
     /// </summary>
-    /// <param name="strSql">SQL语句</param>
+    /// <param name="sql">SQL语句</param>
     /// <param name="param"></param>
     /// <returns></returns>
-    public async Task<T> QueryFirstOrDefaultAsync<T>(string strSql, object? param = null)
+    public async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object? param = null)
     {
         await using var conn = DefaultDbConnectionFactory.CreateConnection();
-        return await conn.QueryFirstOrDefaultAsync<T>(strSql, param);
+        return await conn.QueryFirstOrDefaultAsync<T>(sql, param);
     }
 
     /// <summary>
@@ -50,26 +50,26 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <summary>
     /// 执行SQL
     /// </summary>
-    /// <param name="strSql">SQL语句</param>
+    /// <param name="sql">SQL语句</param>
     /// <param name="param">参数</param>
     /// <returns>，0执行失败</returns>
-    public async Task<int> ExecuteAsync(string strSql, object? param = null)
+    public async Task<int> ExecuteAsync(string sql, object? param = null)
     {
         await using var conn = DefaultDbConnectionFactory.CreateConnection();
-        return await conn.ExecuteAsync(strSql, param);
+        return await conn.ExecuteAsync(sql, param);
     }
 
     /// <summary>
     /// 执行SQL
     /// </summary>
-    /// <param name="strSql">SQL语句</param>
+    /// <param name="sql">SQL语句</param>
     /// <param name="trans"></param>
     /// <param name="param">参数</param>
     /// <returns>0执行失败</returns>
-    public async Task<int> ExecuteAsync(string strSql, IDbTransaction trans, object? param = null)
+    public async Task<int> ExecuteAsync(string sql, IDbTransaction trans, object? param = null)
     {
         await using var conn = DefaultDbConnectionFactory.CreateConnection();
-        return await conn.ExecuteAsync(strSql, param, trans);
+        return await conn.ExecuteAsync(sql, param, trans);
     }
 
     /// <summary>
@@ -116,9 +116,9 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <summary>
     ///
     /// </summary>
-    /// <param name="strSql"></param>
+    /// <param name="sql"></param>
     /// <returns></returns>
-    public async Task<int> ExecuteTransactionAsync(string strSql)
+    public async Task<int> ExecuteTransactionAsync(string sql)
     {
         await using var conn = DefaultDbConnectionFactory.CreateConnection();
         IDbTransaction trans = null;
@@ -127,7 +127,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
             await conn.OpenAsync();
             trans = await conn.BeginTransactionAsync();
 
-            var iResult = await conn.ExecuteAsync(strSql, trans);
+            var iResult = await conn.ExecuteAsync(sql, trans);
             if (iResult > 0)
             {
                 trans.Commit();
@@ -151,7 +151,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     }
 
     /// <summary>
-    ///
+    /// 执行函数
     /// </summary>
     /// <param name="func"></param>
     /// <returns></returns>
@@ -191,15 +191,36 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// 分页查询
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="searchSql"></param>
-    /// <param name="countSql"></param>
+    /// <param name="sql">sql</param>
+    /// <param name="currentPage">当前页</param>
+    /// <param name="pageSize">每页多少条</param>
     /// <returns></returns>
-    public async Task<(List<T> data, long total)> QueryPaginationAsync<T>(string searchSql, string countSql)
+    public async Task<(List<T> data, int total)> QueryPaginationAsync<T>(string sql, int currentPage, int pageSize)
     {
         await using var conn = DefaultDbConnectionFactory.CreateConnection();
-        await using var res = await conn.QueryMultipleAsync(searchSql + countSql);
-        var data = (await res.ReadAsync<T>()).ToList();
-        var total = await res.ReadFirstAsync<long>();
+        var res = await conn.QueryAsync<T>(sql);
+        var data = res.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+        var total = res.TryGetNonEnumeratedCount(out var count) ? count : 0;
         return (data, total);
+    }
+
+    /// <summary>
+    /// 一次查询多条sql
+    /// </summary>
+    /// <param name="sql"></param>
+    /// <param name="param"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// 记得使用using释放资源,使用方式如下
+    /// <code>
+    /// using var res = await QueryMultipleAsync(sql,param);
+    /// var first = await res.ReadFirstAsync{T}();
+    /// </code>
+    /// 
+    /// </remarks>
+    public async Task<SqlMapper.GridReader> QueryMultipleAsync(string sql, object? param = null)
+    {
+        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        return await conn.QueryMultipleAsync(sql, param);
     }
 }

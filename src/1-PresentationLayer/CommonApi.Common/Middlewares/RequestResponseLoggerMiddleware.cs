@@ -26,7 +26,7 @@ public sealed class RequestResponseLoggerMiddleware(IConfiguration config, ILogg
     private readonly RecyclableMemoryStreamManager _manager = new();
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="httpContext"></param>
     public async Task InvokeAsync(HttpContext httpContext)
@@ -37,46 +37,53 @@ public sealed class RequestResponseLoggerMiddleware(IConfiguration config, ILogg
             return;
         }
         // Middleware is enabled only when the EnableRequestResponseLogging config value is set.
-
-        _logger.LogInformation($"""
-                                    HTTP request information:
-                                    Method: {httpContext.Request.Method}
-                                    Path: {httpContext.Request.Path}
-                                    QueryString: {httpContext.Request.QueryString}
-                                    Headers: {FormatHeaders(httpContext.Request.Headers)}
-                                    Schema: {httpContext.Request.Scheme}
-                                    Host: {httpContext.Request.Host}
-                                    Body: {await ReadBodyFromRequest(httpContext.Request)}
-                                """);
+        _logger.LogInformation("""
+                                                HTTP request information:
+                                                Method: {Method}
+                                                Path: {Path}
+                                                QueryString: {QueryString}
+                                                Headers: {Headers}
+                                                Schema: {Scheme}
+                                                Host: {Host}
+                                                Body: {Body}
+                                              """, httpContext.Request.Method,
+                                                                httpContext.Request.Path,
+                                                                httpContext.Request.QueryString,
+                                                                httpContext.Request.Headers,
+                                                                httpContext.Request.Scheme,
+                                                                httpContext.Request.Host,
+                                                                await ReadBodyFromRequest(httpContext.Request));
 
         // Temporarily replace the HttpResponseStream, which is a write-only stream, with a MemoryStream to capture it's value in-flight.
-
-        // Call the next middleware in the pipeline
-
-        var originalResponseBody = httpContext.Response.Body;
+        await using var originalResponseBody = httpContext.Response.Body;
         using var newResponseBody = _manager.GetStream();
         httpContext.Response.Body = newResponseBody;
+        // Call the next middleware in the pipeline
         await next(httpContext);
-        if (newResponseBody.CanRead && newResponseBody.CanSeek)
-        {
-            newResponseBody.Seek(0, SeekOrigin.Begin);
-            var responseBodyText = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
+        newResponseBody.Seek(0, SeekOrigin.Begin);
+        using var streamReader = new StreamReader(httpContext.Response.Body);
+        var responseBodyText = await streamReader.ReadToEndAsync();
 
-            _logger.LogInformation($"""
-                                    HTTP response information:
-                                    StatusCode: {httpContext.Response.StatusCode}
-                                    ContentType: {httpContext.Response.ContentType}
-                                    Headers: {FormatHeaders(httpContext.Response.Headers)}
-                                    Body: {responseBodyText}
-                                    """);
+        _logger.LogInformation("""
+                                                HTTP response information:
+                                                StatusCode: {StatusCode}
+                                                ContentType: {ContentType}
+                                                Headers: {Headers}
+                                                Body: {Body}
+                                             """, httpContext.Response.StatusCode,
+                                                            httpContext.Response.ContentType,
+                                                            httpContext.Response.Headers,
+                                                            responseBodyText);
 
-            newResponseBody.Seek(0, SeekOrigin.Begin);
-            await newResponseBody.CopyToAsync(originalResponseBody);
-        }
+        newResponseBody.Seek(0, SeekOrigin.Begin);
+        await newResponseBody.CopyToAsync(originalResponseBody);
     }
 
-    private static string FormatHeaders(IHeaderDictionary headers) => string.Join(", ", headers.Select(kvp => $"{{{kvp.Key}: {string.Join(", ", kvp.Value)}}}"));
-
+    /// <summary>
+    /// 从流中读取请求体
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     private static async Task<string> ReadBodyFromRequest(HttpRequest request)
     {
         // Ensure the request's body can be read multiple times (for the next middlewares in the pipeline).

@@ -65,7 +65,7 @@ public static class ColumnMapper
         .Where(type => !string.IsNullOrWhiteSpace(type.Namespace) && (type.Namespace.Equals(namespaceName) || type.Namespace.StartsWith(namespaceName + ".")))
         .AsParallel().ForAll(type =>
         {
-            var propertyInfoList = type.GetProperties().Where(p => p.GetCustomAttribute(typeof(ColumnAttribute), false) != null);
+            var propertyInfoList = type.GetProperties().Where(p => p.GetCustomAttribute(typeof(ColumnAttribute), false) != null).ToArray();
             if (propertyInfoList.Any())
                 //properties.Add((type, propertyInfos));
                 SqlMapper.SetTypeMap(type, new ColumnAttributeTypeMapper(type, propertyInfoList));
@@ -86,9 +86,20 @@ public static class ColumnMapper
         .Where(type => !string.IsNullOrWhiteSpace(type.Namespace) && (type.Namespace.Equals(namespaceName, StringComparison.Ordinal) || type.Namespace.StartsWith(namespaceName + ".", StringComparison.Ordinal)))
         .AsParallel().ForAll(type =>
         {
-            var propertyInfoList = type.GetProperties().Where(p => p.GetCustomAttribute(typeof(ColumnAttribute), false) != null);
+            var propertyInfoList = type.GetProperties().Where(p => p.GetCustomAttribute(typeof(ColumnAttribute), false) != null).ToArray();
             if (propertyInfoList.Any())
                 SqlMapper.SetTypeMap(type, new ColumnAttributeTypeMapper(type, propertyInfoList));//SetTypeMap方法内部已经加了锁
         });
+    }
+
+    /// <summary>
+    /// 查找所有属性
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public static void FindCustomAttributesPropertyInfo<T>() where T : class
+    {
+        //添加dapper实体类
+        var assembly = typeof(T).Assembly;
+        FindCustomAttributesPropertyInfo(assembly, assembly.GetName().Name!);
     }
 }

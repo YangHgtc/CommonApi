@@ -12,7 +12,6 @@ public sealed class MysqlConnectionFactory(string connectionString) : IDbConnect
     public DbConnection CreateConnection()
     {
         var connection = new MySqlConnection(connectionString);
-        connection.Open();
         return connection;
     }
 }

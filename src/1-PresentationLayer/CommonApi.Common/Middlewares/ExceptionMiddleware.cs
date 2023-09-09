@@ -52,24 +52,7 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, Req
     /// <returns></returns>
     private async Task HandleException(HttpContext context, Exception exception)
     {
-        if (exception.InnerException != null)
-        {
-            while (exception.InnerException != null)
-            {
-                exception = exception.InnerException;
-            }
-        }
-
-        var errorResult = new ResponseResult<bool>() { Code = (int)ResponseStatusCode.Fail };
-        if (exception is FluentValidation.ValidationException fluentException)
-        {
-            var errors = fluentException.Errors.Select(error => error.ErrorMessage);
-            errorResult.Message = string.Join(";", errors);
-        }
-        else
-        {
-            errorResult.Message = exception.Message;
-        }
+        var errorResult = WrapErrorResult(exception);
 
         var response = context.Response;
         response.StatusCode = exception switch
@@ -88,5 +71,34 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, Req
         {
             logger.LogWarning("Can't write error response. Response has already started.");
         }
+    }
+
+    /// <summary>
+    /// 包装异常信息
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <returns></returns>
+    private static ResponseResult<bool> WrapErrorResult(Exception exception)
+    {
+        if (exception.InnerException != null)
+        {
+            while (exception.InnerException != null)
+            {
+                exception = exception.InnerException;
+            }
+        }
+
+        var errorResult = new ResponseResult<bool> { Code = (int)ResponseStatusCode.Fail };
+        if (exception is FluentValidation.ValidationException fluentException)
+        {
+            var errors = fluentException.Errors.Select(error => error.ErrorMessage);
+            errorResult.Message = string.Join(";", errors);
+        }
+        else
+        {
+            errorResult.Message = exception.Message;
+        }
+
+        return errorResult;
     }
 }

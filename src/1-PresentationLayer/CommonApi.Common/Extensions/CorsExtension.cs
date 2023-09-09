@@ -1,7 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommonApi.Common.Extensions;
-
+/// <summary>
+/// 跨域扩展
+/// </summary>
 public static class CorsExtension
 {
     /// <summary>

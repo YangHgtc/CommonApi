@@ -14,6 +14,12 @@ public static class InjectionExtension
     /// <param name="services"></param>
     /// <param name="serviceLifetime">生命周期</param>
     /// <returns></returns>
+    /// <remarks>
+    /// 注意接口和实现类除了接口的I前缀外必须一致,如下示例
+    /// <code>
+    /// public class Service : IService
+    /// </code>
+    /// </remarks>
     public static IServiceCollection RegisterByScanAssembly<T>(this IServiceCollection services, ServiceLifetime serviceLifetime)
     {
         services.Scan(scan =>

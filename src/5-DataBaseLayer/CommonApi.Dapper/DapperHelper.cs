@@ -19,26 +19,26 @@ public partial class DapperHelper : IDapperHelper
     ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="strSql"></param>
+    /// <param name="sql"></param>
     /// <param name="param"></param>
     /// <returns></returns>
-    public List<T> QueryList<T>(string strSql, object? param = null)
+    public List<T> QueryList<T>(string sql, object? param = null)
     {
         using var conn = DefaultDbConnectionFactory.CreateConnection();
-        var result = conn.Query<T>(strSql, param);
+        var result = conn.Query<T>(sql, param);
         return result.AsList();
     }
 
     /// <summary>
     /// 执行SQL返回一个对象
     /// </summary>
-    /// <param name="strSql">SQL语句</param>
+    /// <param name="sql">SQL语句</param>
     /// <param name="param"></param>
     /// <returns></returns>
-    public T QueryFirstOrDefault<T>(string strSql, object? param = null)
+    public T QueryFirstOrDefault<T>(string sql, object? param = null)
     {
         using var conn = DefaultDbConnectionFactory.CreateConnection();
-        return conn.QueryFirstOrDefault<T>(strSql, param);
+        return conn.QueryFirstOrDefault<T>(sql, param);
     }
 
     /// <summary>
@@ -57,26 +57,26 @@ public partial class DapperHelper : IDapperHelper
     /// <summary>
     /// 执行SQL
     /// </summary>
-    /// <param name="strSql">SQL语句</param>
+    /// <param name="sql">SQL语句</param>
     /// <param name="param">参数</param>
     /// <returns>，0执行失败</returns>
-    public int Execute(string strSql, object? param = null)
+    public int Execute(string sql, object? param = null)
     {
         using var conn = DefaultDbConnectionFactory.CreateConnection();
-        return conn.Execute(strSql, param);
+        return conn.Execute(sql, param);
     }
 
     /// <summary>
     /// 执行SQL
     /// </summary>
-    /// <param name="strSql">SQL语句</param>
+    /// <param name="sql">SQL语句</param>
     /// <param name="trans"></param>
     /// <param name="param">参数</param>
     /// <returns>0执行失败</returns>
-    public int Execute(string strSql, IDbTransaction trans, object? param = null)
+    public int Execute(string sql, IDbTransaction trans, object? param = null)
     {
         using var conn = DefaultDbConnectionFactory.CreateConnection();
-        return conn.Execute(strSql, param, trans);
+        return conn.Execute(sql, param, trans);
     }
 
     /// <summary>
@@ -123,9 +123,9 @@ public partial class DapperHelper : IDapperHelper
     /// <summary>
     ///
     /// </summary>
-    /// <param name="strSql"></param>
+    /// <param name="sql"></param>
     /// <returns></returns>
-    public int ExecuteTransaction(string strSql)
+    public int ExecuteTransaction(string sql)
     {
         using var conn = DefaultDbConnectionFactory.CreateConnection();
         IDbTransaction trans = null;
@@ -134,7 +134,7 @@ public partial class DapperHelper : IDapperHelper
             conn.Open();
             trans = conn.BeginTransaction();
 
-            var iResult = conn.Execute(strSql, trans);
+            var iResult = conn.Execute(sql, trans);
             if (iResult > 0)
             {
                 trans.Commit();
@@ -194,21 +194,5 @@ public partial class DapperHelper : IDapperHelper
         {
             conn.Close();
         }
-    }
-
-    /// <summary>
-    /// 分页查询
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="searchSql"></param>
-    /// <param name="countSql"></param>
-    /// <returns></returns>
-    public (long, List<T>) QueryPagination<T>(string searchSql, string countSql)
-    {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
-        using var res = conn.QueryMultiple(countSql + searchSql);
-        var total = res.ReadFirst<long>();
-        var data = (res.Read<T>()).ToList();
-        return (total, data);
     }
 }

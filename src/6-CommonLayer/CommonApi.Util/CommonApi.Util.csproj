@@ -6,7 +6,9 @@
 
 
   <ItemGroup>
+    <PackageReference Include="DeepCloner" Version="0.10.4" />
     <PackageReference Include="Enums.NET" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageReference Include="ZString" Version="2.5.0" />
   </ItemGroup>
 

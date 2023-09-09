@@ -1,18 +1,19 @@
 using System.Data;
 using System.Data.Common;
+using Dapper;
 
 namespace CommonApi.Dapper;
 
 
 public interface IDapperHelper
 {
-    int Execute(string strSql, object? param = null);
+    int Execute(string sql, object? param = null);
 
-    int Execute(string strSql, IDbTransaction trans, object? param = null);
+    int Execute(string sql, IDbTransaction trans, object? param = null);
 
-    Task<int> ExecuteAsync(string strSql, object? param = null);
+    Task<int> ExecuteAsync(string sql, object? param = null);
 
-    Task<int> ExecuteAsync(string strSql, IDbTransaction trans, object? param = null);
+    Task<int> ExecuteAsync(string sql, IDbTransaction trans, object? param = null);
 
     bool ExecuteFunc(Func<IDbTransaction, IDbConnection, int> func);
 
@@ -30,25 +31,25 @@ public interface IDapperHelper
 
     Task<int> ExecuteStoredProcedureAsync(string strProcedure, object? param = null);
 
-    int ExecuteTransaction(string strSql);
+    int ExecuteTransaction(string sql);
 
-    Task<int> ExecuteTransactionAsync(string strSql);
+    Task<int> ExecuteTransactionAsync(string sql);
 
     DbConnection GetSqlConnection();
 
-    List<T> QueryList<T>(string strSql, object? parm = null);
+    List<T> QueryList<T>(string sql, object? parm = null);
 
-    Task<List<T>> QueryListAsync<T>(string strSql, object? param = null);
+    Task<List<T>> QueryListAsync<T>(string sql, object? param = null);
 
-    T QueryFirstOrDefault<T>(string strSql, object? parm = null);
+    T QueryFirstOrDefault<T>(string sql, object? parm = null);
 
-    Task<T> QueryFirstOrDefaultAsync<T>(string strSql, object? parm = null);
+    Task<T> QueryFirstOrDefaultAsync<T>(string sql, object? parm = null);
 
-    (long, List<T>) QueryPagination<T>(string searchSql, string countSql);
-
-    Task<(List<T> data, long total)> QueryPaginationAsync<T>(string searchSql, string countSql);
+    Task<(List<T> data, int total)> QueryPaginationAsync<T>(string sql, int currentPage, int pageSize);
 
     T QueryScalar<T>(string sql, object? parms = null);
 
     Task<T> QueryScalarAsync<T>(string sql, object? parms = null);
+
+    Task<SqlMapper.GridReader> QueryMultipleAsync(string sql, object param = null);
 }
