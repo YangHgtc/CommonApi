@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IO;
 
 namespace CommonApi.Common.Middlewares;
 
@@ -19,11 +18,6 @@ public sealed class RequestResponseLoggerMiddleware(IConfiguration config, ILogg
     /// 日志
     /// </summary>
     private readonly ILogger<RequestResponseLoggerMiddleware> _logger = logger;
-
-    /// <summary>
-    /// 可重用MemoryStream
-    /// </summary>
-    private readonly RecyclableMemoryStreamManager _manager = new();
 
     /// <summary>
     ///
@@ -55,8 +49,9 @@ public sealed class RequestResponseLoggerMiddleware(IConfiguration config, ILogg
                                                                 await ReadBodyFromRequest(httpContext.Request));
 
         // Temporarily replace the HttpResponseStream, which is a write-only stream, with a MemoryStream to capture it's value in-flight.
-        await using var originalResponseBody = httpContext.Response.Body;
-        using var newResponseBody = _manager.GetStream();
+        var originalResponseBody = httpContext.Response.Body;
+        using var newResponseBody = new MemoryStream();
+
         httpContext.Response.Body = newResponseBody;
         // Call the next middleware in the pipeline
         await next(httpContext);

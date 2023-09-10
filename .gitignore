@@ -361,3 +361,5 @@ MigrationBackup/
 
 # ignore doc api folder
 Src/Documentation/api/
+/src/1-PresentationLayer/CommonApi.Api/.config/dotnet-tools.json
+/src/1-PresentationLayer/CommonApi.Api/CommonApi.Api.http

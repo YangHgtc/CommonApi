@@ -42,7 +42,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    await app.RunAsync();
+    await app.RunAsync("http://*:5084");
 }
 catch (Exception ex)
 {
