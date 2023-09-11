@@ -1,5 +1,6 @@
 using CommonApi.Business.IServices;
 using CommonApi.Common.Common;
+using CommonApi.Common.Filters;
 using CommonApi.DTO.Requests;
 using CommonApi.DTO.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,7 @@ namespace CommonApi.Api.Controllers;
 /// 天气接口
 /// </summary>
 //[Authorize]
-public class WeatherForecastController(ILogger<WeatherForecastController> logger,
-        IWeatherService weatherService,
-        IServiceProvider serviceProvider)
-    : ValidateControllerBase(serviceProvider)
+public class WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherService weatherService) : ApiControllerBase
 {
     /// <summary>
     /// 获取天气
@@ -36,9 +34,15 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<ResponseResult<bool>> PostWeatherForecast(WeatherRequest request)
+    [ValidationFilter<WeatherRequest>]
+    public ResponseResult<bool> PostWeatherForecast(WeatherRequest request)
     {
-        await ValidateRequest(request);
         return Success(true);
+    }
+
+    [HttpGet]
+    public IResult GetNavite()
+    {
+        return Results.Ok("412121312");
     }
 }

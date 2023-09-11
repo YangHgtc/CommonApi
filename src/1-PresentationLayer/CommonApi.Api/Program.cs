@@ -35,7 +35,7 @@ try
         app.UseMySwaager();
     }
     app.UseSerilogRequestLogging();
-    app.UseMiddleware<RequestResponseLoggerMiddleware>();// 请求响应中间件一定要在异常处理中间件的前面，不然会导致流无法处理
+    //app.UseMiddleware<RequestResponseLoggerMiddleware>();// 请求响应中间件一定要在异常处理中间件的前面，不然会导致流无法处理
     app.UseMiddleware<ExceptionMiddleware>();
     app.UseRouting();
     app.UseCors("AllowAllOrigins");

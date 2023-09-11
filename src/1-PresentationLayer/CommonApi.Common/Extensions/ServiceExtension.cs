@@ -43,7 +43,7 @@ public static class ServiceExtension
     /// <returns></returns>
     public static IServiceCollection AddValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<ValidationForInjection>(ServiceLifetime.Singleton);
+        services.AddValidatorsFromAssemblyContaining<ValidationForInjection>(ServiceLifetime.Transient);
         return services;
     }
 
