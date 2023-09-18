@@ -4,9 +4,9 @@ using Dapper;
 
 namespace CommonApi.Dapper;
 
-public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : IDapperHelper
+public partial class DapperHelper(IAbstractFactory dbConnectionFactory) : IDapperHelper
 {
-    protected IDbConnectionFactory DefaultDbConnectionFactory { get; set; } = dbConnectionFactory;
+    private readonly IDbConnectionFactory _connectionFactory = dbConnectionFactory.Create(DataBaseType.MySql);
 
     /// <summary>
     /// 执行SQL返回一个List
@@ -17,7 +17,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<List<T>> QueryListAsync<T>(string sql, object? param = null)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         var result = await conn.QueryAsync<T>(sql, param);
         return result.AsList();
     }
@@ -30,7 +30,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object? param = null)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         return await conn.QueryFirstOrDefaultAsync<T>(sql, param);
     }
 
@@ -43,7 +43,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<T> QueryScalarAsync<T>(string sql, object? param = null)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         return await conn.ExecuteScalarAsync<T>(sql, param);
     }
 
@@ -55,7 +55,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns>，0执行失败</returns>
     public async Task<int> ExecuteAsync(string sql, object? param = null)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         return await conn.ExecuteAsync(sql, param);
     }
 
@@ -68,7 +68,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns>0执行失败</returns>
     public async Task<int> ExecuteAsync(string sql, IDbTransaction trans, object? param = null)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         return await conn.ExecuteAsync(sql, param, trans);
     }
 
@@ -80,7 +80,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<int> ExecuteStoredProcedureAsync(string strProcedure, object? param = null)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         return await conn.ExecuteAsync(strProcedure, param, null, null, CommandType.StoredProcedure);
     }
 
@@ -93,7 +93,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<List<T>> ExecuteFuncToListAsync<T>(string funcName, object obj)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
 
         var result = await conn.QueryAsync<T>(funcName, obj, commandType: CommandType.StoredProcedure);
         return result.ToList();
@@ -108,7 +108,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<T> ExecuteFuncAsync<T>(string funcName, object obj)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
 
         return await conn.QueryFirstOrDefaultAsync<T>(funcName, obj, commandType: CommandType.StoredProcedure);
     }
@@ -120,7 +120,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<int> ExecuteTransactionAsync(string sql)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         IDbTransaction trans = null;
         try
         {
@@ -157,7 +157,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<bool> ExecuteFuncAsync(Func<IDbTransaction, IDbConnection, Task<int>> func)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         IDbTransaction trans = null;
         try
         {
@@ -197,7 +197,7 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// <returns></returns>
     public async Task<(List<T> data, int total)> QueryPaginationAsync<T>(string sql, int currentPage, int pageSize)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         var res = await conn.QueryAsync<T>(sql);
         var data = res.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
         var total = res.TryGetNonEnumeratedCount(out var count) ? count : 0;
@@ -216,11 +216,11 @@ public partial class DapperHelper(IDbConnectionFactory dbConnectionFactory) : ID
     /// using var res = await QueryMultipleAsync(sql,param);
     /// var first = await res.ReadFirstAsync{T}();
     /// </code>
-    /// 
+    ///
     /// </remarks>
     public async Task<SqlMapper.GridReader> QueryMultipleAsync(string sql, object? param = null)
     {
-        await using var conn = DefaultDbConnectionFactory.CreateConnection();
+        await using var conn = _connectionFactory.CreateConnection();
         return await conn.QueryMultipleAsync(sql, param);
     }
 }

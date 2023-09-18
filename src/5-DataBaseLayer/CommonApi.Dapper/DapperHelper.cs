@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.Common;
+using CommonApi.DataBase.Contracts;
 using Dapper;
 
 namespace CommonApi.Dapper;
@@ -10,9 +11,10 @@ public partial class DapperHelper : IDapperHelper
     /// 获取数据库连接，注意使用using释放连接
     /// </summary>
     /// <returns></returns>
-    public virtual DbConnection GetSqlConnection()
+    public virtual DbConnection GetDbConnection(DataBaseType name = DataBaseType.Default)
     {
-        return DefaultDbConnectionFactory.CreateConnection();
+        var factory = dbConnectionFactory.Create(name);
+        return factory.CreateConnection();
     }
 
     /// <summary>
@@ -24,7 +26,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public List<T> QueryList<T>(string sql, object? param = null)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         var result = conn.Query<T>(sql, param);
         return result.AsList();
     }
@@ -37,7 +39,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public T QueryFirstOrDefault<T>(string sql, object? param = null)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         return conn.QueryFirstOrDefault<T>(sql, param);
     }
 
@@ -50,7 +52,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public T QueryScalar<T>(string sql, object? param = null)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         return conn.ExecuteScalar<T>(sql, param);
     }
 
@@ -62,7 +64,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns>，0执行失败</returns>
     public int Execute(string sql, object? param = null)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         return conn.Execute(sql, param);
     }
 
@@ -75,7 +77,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns>0执行失败</returns>
     public int Execute(string sql, IDbTransaction trans, object? param = null)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         return conn.Execute(sql, param, trans);
     }
 
@@ -87,7 +89,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public int ExecuteStoredProcedure(string strProcedure, object? param = null)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         return conn.Execute(strProcedure, param, null, null, CommandType.StoredProcedure);
     }
 
@@ -100,7 +102,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public List<T> ExecuteFuncToList<T>(string funcName, object obj)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
 
         var result = conn.Query<T>(funcName, obj, commandType: CommandType.StoredProcedure);
         return result.AsList();
@@ -115,7 +117,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public T ExecuteFunc<T>(string funcName, object obj)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
 
         return conn.QueryFirstOrDefault<T>(funcName, obj, commandType: CommandType.StoredProcedure);
     }
@@ -127,7 +129,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public int ExecuteTransaction(string sql)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         IDbTransaction trans = null;
         try
         {
@@ -164,7 +166,7 @@ public partial class DapperHelper : IDapperHelper
     /// <returns></returns>
     public bool ExecuteFunc(Func<IDbTransaction, IDbConnection, int> func)
     {
-        using var conn = DefaultDbConnectionFactory.CreateConnection();
+        using var conn = _connectionFactory.CreateConnection();
         IDbTransaction trans = null;
         try
         {

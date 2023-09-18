@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +23,13 @@ public sealed class ValidationFilter<T> : ActionFilterAttribute where T : class
         //确保泛型类型和请求类型匹配
         if (validationContext.Value is T request)
         {
-            validator!.ValidateAndThrow(request);
+            var results = validator.Validate(request);
+            if (!results.IsValid)
+            {
+                var errors = results.Errors.Select(error => error.ErrorMessage);
+                var message = string.Join(';', errors);
+                context.Result = new BadRequestObjectResult(message);
+            }
         }
         else
         {

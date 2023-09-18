@@ -25,7 +25,10 @@ try
     builder.Services.AddMvcControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwagger();
+    if (builder.Environment.IsDevelopment())
+    {
+        builder.Services.AddSwagger();
+    }
     builder.Services.AddServices(config);
     builder.Services.AddMyCors();
     var app = builder.Build();

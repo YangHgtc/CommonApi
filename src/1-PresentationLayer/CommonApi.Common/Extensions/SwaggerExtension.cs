@@ -1,4 +1,3 @@
-using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -19,12 +18,6 @@ public static class SwaggerExtension
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-        app.UseKnife4UI(c =>
-        {
-            c.RoutePrefix = ""; // serve the UI at root
-            c.SwaggerEndpoint("/v1/api-docs", "V1 Docs");
-        });
-        app.MapSwagger("{documentName}/api-docs");
         return app;
     }
 

@@ -4,4 +4,4 @@ namespace CommonApi.DTO.Requests;
 /// 
 /// </summary>
 /// <param name="MaxTemp"></param>
-public sealed record WeatherRequest(int MaxTemp);
+public sealed record WeatherRequest(int MaxTemp, string MinTemp);

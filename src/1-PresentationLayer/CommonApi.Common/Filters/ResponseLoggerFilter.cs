@@ -1,4 +1,5 @@
 using CommonApi.Util.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -14,13 +15,15 @@ public sealed class ResponseLoggerFilter(ILogger<RequestLoggerFilter> logger) : 
     /// <inheritdoc/>
     public void OnResultExecuting(ResultExecutingContext context)
     {
-    }
-
-    /// <inheritdoc/>
-    public void OnResultExecuted(ResultExecutedContext context)
-    {
         if (context?.Result is ObjectResult result)
         {
+            //统一包装400序列化失败请求
+            if (result is { StatusCode: StatusCodes.Status400BadRequest, Value: ValidationProblemDetails detail })
+            {
+                var errors = detail.Errors.Where(x => x.Key != "$").SelectMany(x => x.Value);
+                var message = string.Join(';', errors);
+                context.Result = new BadRequestObjectResult(message);
+            }
             var response = result.Value;
             logger.LogInformation("""
                                      HTTP response information:
@@ -33,5 +36,10 @@ public sealed class ResponseLoggerFilter(ILogger<RequestLoggerFilter> logger) : 
                 context.HttpContext.Response.Headers,
                 response.Serialize());
         }
+    }
+
+    /// <inheritdoc/>
+    public void OnResultExecuted(ResultExecutedContext context)
+    {
     }
 }

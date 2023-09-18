@@ -35,7 +35,7 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     /// <returns></returns>
     [HttpPost]
     [ValidationFilter<WeatherRequest>]
-    public ResponseResult<bool> PostWeatherForecast(WeatherRequest request)
+    public ResponseResult<bool> PostWeatherForecast([FromBody] WeatherRequest request)
     {
         return Success(true);
     }

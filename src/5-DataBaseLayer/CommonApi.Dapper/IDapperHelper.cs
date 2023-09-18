@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.Common;
+using CommonApi.DataBase.Contracts;
 using Dapper;
 
 namespace CommonApi.Dapper;
@@ -35,7 +36,7 @@ public interface IDapperHelper
 
     Task<int> ExecuteTransactionAsync(string sql);
 
-    DbConnection GetSqlConnection();
+    DbConnection GetDbConnection(DataBaseType name = DataBaseType.Default);
 
     List<T> QueryList<T>(string sql, object? parm = null);
 

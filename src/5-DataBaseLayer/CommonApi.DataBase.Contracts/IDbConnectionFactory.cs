@@ -18,3 +18,25 @@ public interface IDbConnectionFactory
     /// <returns></returns>
     public DbConnection CreateConnection();
 }
+
+public interface IAbstractFactory
+{
+    IDbConnectionFactory Create(DataBaseType name = DataBaseType.Default);
+}
+
+public sealed class AbstractFactory : IAbstractFactory
+{
+    private readonly Func<IEnumerable<IDbConnectionFactory>> _factory;
+
+    public AbstractFactory(Func<IEnumerable<IDbConnectionFactory>> factory)
+    {
+        _factory = factory;
+    }
+
+    public IDbConnectionFactory Create(DataBaseType name = DataBaseType.Default)
+    {
+        var set = _factory();
+        var output = name == DataBaseType.Default ? set.First() : set.First(x => x.DataBaseName == name);
+        return output;
+    }
+}

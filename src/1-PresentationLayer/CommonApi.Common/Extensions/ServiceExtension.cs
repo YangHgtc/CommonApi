@@ -6,6 +6,7 @@ using CommonApi.Entity;
 using CommonApi.Mapper;
 using CommonApi.Mysql;
 using CommonApi.Repository;
+using CommonApi.Sqlite;
 using CommonApi.Validation;
 using FluentValidation;
 using Mapster;
@@ -16,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CommonApi.Common.Extensions;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public static class ServiceExtension
 {
@@ -93,8 +94,11 @@ public static class ServiceExtension
     {
         var connection = config.GetValue<string>("ConnectionStrings:DefaultConnection");
         ArgumentNullException.ThrowIfNull(connection, nameof(config));
-        services.AddSingleton<IDbConnectionFactory>(_ => new MysqlConnectionFactory(connection));
-        services.AddSingleton<IDapperHelper, DapperHelper>();
+        services.AddTransient<IDbConnectionFactory>(_ => new MysqlConnectionFactory(connection));
+        services.AddTransient<IDbConnectionFactory>(_ => new SqliteConnectionFactory(connection));
+        services.AddScoped<IDapperHelper, DapperHelper>();
+        services.AddSingleton<Func<IEnumerable<IDbConnectionFactory>>>(x => () => x.GetService<IEnumerable<IDbConnectionFactory>>()!);
+        services.AddSingleton<IAbstractFactory, AbstractFactory>();
         //添加dapper实体类
         ColumnMapper.FindCustomAttributesPropertyInfo<EntityForInjection>();
         return services;
