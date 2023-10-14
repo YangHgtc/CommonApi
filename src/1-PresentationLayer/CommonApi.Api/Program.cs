@@ -6,7 +6,8 @@ using Serilog.Events;
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
-    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
+        true)
     .Build();
 
 Log.Logger = new LoggerConfiguration()
@@ -29,13 +30,14 @@ try
     {
         builder.Services.AddSwagger();
     }
+
     builder.Services.AddServices(config);
     builder.Services.AddMyCors();
     var app = builder.Build();
     Log.Information(app.Environment.EnvironmentName);
     if (app.Environment.IsDevelopment())
     {
-        app.UseMySwaager();
+        app.UseMySwagger();
     }
     app.UseSerilogRequestLogging();
     //app.UseMiddleware<RequestResponseLoggerMiddleware>();// 请求响应中间件一定要在异常处理中间件的前面，不然会导致流无法处理
@@ -45,7 +47,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    await app.RunAsync("http://*:5084");
+    await app.RunAsync();
 }
 catch (Exception ex)
 {

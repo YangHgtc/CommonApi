@@ -5,7 +5,6 @@ using Dapper;
 
 namespace CommonApi.Dapper;
 
-
 public interface IDapperHelper
 {
     int Execute(string sql, object? param = null);
@@ -20,9 +19,9 @@ public interface IDapperHelper
 
     T ExecuteFunc<T>(string funcName, object obj);
 
-    Task<bool> ExecuteFuncAsync(Func<IDbTransaction, IDbConnection, Task<int>> func);
+    Task<bool> ExecuteFuncAsync(Func<IDbTransaction?, IDbConnection, Task<int>> func);
 
-    Task<T> ExecuteFuncAsync<T>(string funcName, object obj);
+    Task<T?> ExecuteFuncAsync<T>(string funcName, object obj);
 
     List<T> ExecuteFuncToList<T>(string funcName, object obj);
 
@@ -44,13 +43,13 @@ public interface IDapperHelper
 
     T QueryFirstOrDefault<T>(string sql, object? parm = null);
 
-    Task<T> QueryFirstOrDefaultAsync<T>(string sql, object? parm = null);
+    Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? parm = null);
 
     Task<(List<T> data, int total)> QueryPaginationAsync<T>(string sql, int currentPage, int pageSize);
 
     T QueryScalar<T>(string sql, object? parms = null);
 
-    Task<T> QueryScalarAsync<T>(string sql, object? parms = null);
+    Task<T?> QueryScalarAsync<T>(string sql, object? parms = null);
 
     Task<SqlMapper.GridReader> QueryMultipleAsync(string sql, object param = null);
 }

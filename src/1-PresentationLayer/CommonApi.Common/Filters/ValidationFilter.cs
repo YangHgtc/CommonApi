@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CommonApi.Common.Filters;
 
 /// <summary>
-/// 请求验证过滤器
+///     请求验证过滤器
 /// </summary>
 public sealed class ValidationFilter<T> : ActionFilterAttribute where T : class
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         var validationContext = context.ActionArguments.FirstOrDefault();
@@ -37,7 +37,8 @@ public sealed class ValidationFilter<T> : ActionFilterAttribute where T : class
         }
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void OnActionExecuted(ActionExecutedContext context)
-    { }
+    {
+    }
 }

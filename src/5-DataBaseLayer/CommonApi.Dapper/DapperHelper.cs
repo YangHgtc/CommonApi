@@ -8,17 +8,16 @@ namespace CommonApi.Dapper;
 public partial class DapperHelper : IDapperHelper
 {
     /// <summary>
-    /// 获取数据库连接，注意使用using释放连接
+    ///     获取数据库连接，注意使用using释放连接
     /// </summary>
     /// <returns></returns>
     public virtual DbConnection GetDbConnection(DataBaseType name = DataBaseType.Default)
     {
-        var factory = dbConnectionFactory.Create(name);
+        var factory = dbConnectionConnectionFactory.CreateConnectionFactory(name);
         return factory.CreateConnection();
     }
 
     /// <summary>
-    ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="sql"></param>
@@ -32,7 +31,7 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    /// 执行SQL返回一个对象
+    ///     执行SQL返回一个对象
     /// </summary>
     /// <param name="sql">SQL语句</param>
     /// <param name="param"></param>
@@ -44,7 +43,6 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="sql"></param>
@@ -57,7 +55,7 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    /// 执行SQL
+    ///     执行SQL
     /// </summary>
     /// <param name="sql">SQL语句</param>
     /// <param name="param">参数</param>
@@ -69,7 +67,7 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    /// 执行SQL
+    ///     执行SQL
     /// </summary>
     /// <param name="sql">SQL语句</param>
     /// <param name="trans"></param>
@@ -82,7 +80,7 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    /// 执行存储过程
+    ///     执行存储过程
     /// </summary>
     /// <param name="strProcedure">过程名</param>
     /// <param name="param">参数</param>
@@ -94,7 +92,7 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    /// 执行存储过程，返回集合
+    ///     执行存储过程，返回集合
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="funcName"></param>
@@ -109,7 +107,6 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="funcName"></param>
@@ -123,7 +120,6 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    ///
     /// </summary>
     /// <param name="sql"></param>
     /// <returns></returns>
@@ -160,7 +156,6 @@ public partial class DapperHelper : IDapperHelper
     }
 
     /// <summary>
-    ///
     /// </summary>
     /// <param name="func"></param>
     /// <returns></returns>

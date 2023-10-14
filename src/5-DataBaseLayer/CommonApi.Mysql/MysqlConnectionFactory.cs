@@ -4,11 +4,9 @@ using MySqlConnector;
 
 namespace CommonApi.Mysql;
 
+[DataBaseName(Name = DataBaseType.MySql)]
 public sealed class MysqlConnectionFactory(string connectionString) : IDbConnectionFactory
 {
-    public DataBaseType DataBaseName { get; set; } = DataBaseType.MySql;
-
-
     public DbConnection CreateConnection()
     {
         var connection = new MySqlConnection(connectionString);

@@ -5,22 +5,24 @@ using Microsoft.Extensions.Logging;
 namespace CommonApi.Common.Middlewares;
 
 /// <summary>
-/// 请求响应中间件
+///     请求响应中间件
 /// </summary>
-public sealed class RequestResponseLoggerMiddleware(IConfiguration config, ILogger<RequestResponseLoggerMiddleware> logger, RequestDelegate next)
+public sealed class RequestResponseLoggerMiddleware(
+    IConfiguration config,
+    ILogger<RequestResponseLoggerMiddleware> logger,
+    RequestDelegate next)
 {
     /// <summary>
-    /// 是否启用记录请求和响应
+    ///     是否启用记录请求和响应
     /// </summary>
     private readonly bool _isRequestResponseLoggingEnabled = config.GetValue("EnableRequestResponseLogging", false);
 
     /// <summary>
-    /// 日志
+    ///     日志
     /// </summary>
     private readonly ILogger<RequestResponseLoggerMiddleware> _logger = logger;
 
     /// <summary>
-    ///
     /// </summary>
     /// <param name="httpContext"></param>
     public async Task InvokeAsync(HttpContext httpContext)
@@ -30,23 +32,24 @@ public sealed class RequestResponseLoggerMiddleware(IConfiguration config, ILogg
             await next(httpContext);
             return;
         }
+
         // Middleware is enabled only when the EnableRequestResponseLogging config value is set.
         _logger.LogInformation("""
-                                                HTTP request information:
-                                                Method: {Method}
-                                                Path: {Path}
-                                                QueryString: {QueryString}
-                                                Headers: {Headers}
-                                                Schema: {Scheme}
-                                                Host: {Host}
-                                                Body: {Body}
-                                              """, httpContext.Request.Method,
-                                                                httpContext.Request.Path,
-                                                                httpContext.Request.QueryString,
-                                                                httpContext.Request.Headers,
-                                                                httpContext.Request.Scheme,
-                                                                httpContext.Request.Host,
-                                                                await ReadBodyFromRequest(httpContext.Request));
+                                 HTTP request information:
+                                 Method: {Method}
+                                 Path: {Path}
+                                 QueryString: {QueryString}
+                                 Headers: {Headers}
+                                 Schema: {Scheme}
+                                 Host: {Host}
+                                 Body: {Body}
+                               """, httpContext.Request.Method,
+            httpContext.Request.Path,
+            httpContext.Request.QueryString,
+            httpContext.Request.Headers,
+            httpContext.Request.Scheme,
+            httpContext.Request.Host,
+            await ReadBodyFromRequest(httpContext.Request));
 
         // Temporarily replace the HttpResponseStream, which is a write-only stream, with a MemoryStream to capture it's value in-flight.
         var originalResponseBody = httpContext.Response.Body;
@@ -60,22 +63,22 @@ public sealed class RequestResponseLoggerMiddleware(IConfiguration config, ILogg
         var responseBodyText = await streamReader.ReadToEndAsync();
 
         _logger.LogInformation("""
-                                                HTTP response information:
-                                                StatusCode: {StatusCode}
-                                                ContentType: {ContentType}
-                                                Headers: {Headers}
-                                                Body: {Body}
-                                             """, httpContext.Response.StatusCode,
-                                                            httpContext.Response.ContentType,
-                                                            httpContext.Response.Headers,
-                                                            responseBodyText);
+                                  HTTP response information:
+                                  StatusCode: {StatusCode}
+                                  ContentType: {ContentType}
+                                  Headers: {Headers}
+                                  Body: {Body}
+                               """, httpContext.Response.StatusCode,
+            httpContext.Response.ContentType,
+            httpContext.Response.Headers,
+            responseBodyText);
 
         newResponseBody.Seek(0, SeekOrigin.Begin);
         await newResponseBody.CopyToAsync(originalResponseBody);
     }
 
     /// <summary>
-    /// 从流中读取请求体
+    ///     从流中读取请求体
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>

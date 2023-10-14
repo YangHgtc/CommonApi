@@ -6,7 +6,7 @@ namespace CommonApi.Util.Extensions;
 public static class DatetimeExtension
 {
     /// <summary>
-    /// 返回 yyyy-MM-dd HH:mm:ss 格式的时间
+    ///     返回 yyyy-MM-dd HH:mm:ss 格式的时间
     /// </summary>
     /// <param name="dt"></param>
     /// <returns></returns>
@@ -16,7 +16,7 @@ public static class DatetimeExtension
     }
 
     /// <summary>
-    /// 本周第一天
+    ///     本周第一天
     /// </summary>
     /// <param name="dt"></param>
     /// <returns></returns>
@@ -30,7 +30,7 @@ public static class DatetimeExtension
     }
 
     /// <summary>
-    /// 本月第一天凌晨
+    ///     本月第一天凌晨
     /// </summary>
     /// <param name="dt"></param>
     /// <returns></returns>
@@ -40,24 +40,26 @@ public static class DatetimeExtension
     }
 
     /// <summary>
-    /// 判断当前时间是否在比较时间之前
+    ///     判断当前时间是否在比较时间之前
     /// </summary>
     /// <param name="current">The current value.</param>
     /// <param name="toCompareWith">Value to compare with.</param>
     /// <returns>
-    ///
     /// </returns>
-    public static bool IsBefore(this DateTime current, DateTime toCompareWith) =>
-        current < toCompareWith;
+    public static bool IsBefore(this DateTime current, DateTime toCompareWith)
+    {
+        return current < toCompareWith;
+    }
 
     /// <summary>
-    /// 判断当前时间是否在比较时间之后
+    ///     判断当前时间是否在比较时间之后
     /// </summary>
     /// <param name="current">The current value.</param>
     /// <param name="toCompareWith">Value to compare with.</param>
     /// <returns>
-    /// 	
     /// </returns>
-    public static bool IsAfter(this DateTime current, DateTime toCompareWith) =>
-        current > toCompareWith;
+    public static bool IsAfter(this DateTime current, DateTime toCompareWith)
+    {
+        return current > toCompareWith;
+    }
 }

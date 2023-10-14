@@ -1,6 +1,5 @@
-namespace CommonApi.Business.SharedBusiness
+namespace CommonApi.Business.SharedBusiness;
+
+public class SharedService
 {
-    public class SharedService
-    {
-    }
 }

@@ -4,9 +4,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\4-EntityLayer\CommonApi.Entity\CommonApi.Entity.csproj" />
-    <ProjectReference Include="..\..\5-DataBaseLayer\CommonApi.Dapper\CommonApi.Dapper.csproj" />
-    <ProjectReference Include="..\..\6-CommonLayer\CommonApi.Util\CommonApi.Util.csproj" />
+    <ProjectReference Include="..\..\4-EntityLayer\CommonApi.Entity\CommonApi.Entity.csproj"/>
+    <ProjectReference Include="..\..\5-DataBaseLayer\CommonApi.Dapper\CommonApi.Dapper.csproj"/>
+    <ProjectReference Include="..\..\6-CommonLayer\CommonApi.Util\CommonApi.Util.csproj"/>
   </ItemGroup>
 
 </Project>

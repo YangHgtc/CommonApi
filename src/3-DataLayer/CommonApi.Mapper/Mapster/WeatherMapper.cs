@@ -5,7 +5,7 @@ using Mapster;
 namespace CommonApi.Mapper.Mapster;
 
 /// <summary>
-/// 需要映射的实现IRegister接口
+///     需要映射的实现IRegister接口
 /// </summary>
 public sealed class WeatherMapper : IRegister
 {

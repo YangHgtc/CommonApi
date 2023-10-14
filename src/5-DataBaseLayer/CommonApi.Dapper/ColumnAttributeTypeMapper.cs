@@ -19,7 +19,7 @@ public sealed class ColumnAttributeTypeMapper<T>() : FallbackTypeMapper(new SqlM
 });
 
 /// <summary>
-/// 我自定义的映射
+///     我自定义的映射
 /// </summary>
 public sealed class ColumnAttributeTypeMapper : FallbackTypeMapper
 {
@@ -64,7 +64,9 @@ public class FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers) : SqlMa
             {
                 var result = mapper.FindConstructor(names, types);
                 if (result != null)
+                {
                     return result;
+                }
             }
             catch (NotImplementedException)
             {
@@ -82,7 +84,9 @@ public class FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers) : SqlMa
             {
                 var result = mapper.GetConstructorParameter(constructor, columnName);
                 if (result != null)
+                {
                     return result;
+                }
             }
             catch (NotImplementedException)
             {
@@ -100,7 +104,9 @@ public class FallbackTypeMapper(IEnumerable<SqlMapper.ITypeMap> mappers) : SqlMa
             {
                 var result = mapper.GetMember(columnName);
                 if (result != null)
+                {
                     return result;
+                }
             }
             catch (NotImplementedException)
             {

@@ -4,11 +4,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.7.1" />
+    <PackageReference Include="FluentValidation" Version="11.7.1"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\4-EntityLayer\CommonApi.DTO\CommonApi.DTO.csproj" />
+    <ProjectReference Include="..\..\4-EntityLayer\CommonApi.DTO\CommonApi.DTO.csproj"/>
   </ItemGroup>
 
 </Project>

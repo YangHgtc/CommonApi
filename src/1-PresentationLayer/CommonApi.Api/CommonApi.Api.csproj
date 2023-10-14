@@ -5,34 +5,38 @@
     <UserSecretsId>0afe1e32-a688-4186-9af2-acafb9cc1a86</UserSecretsId>
   </PropertyGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties/>
+    </VisualStudio>
+  </ProjectExtensions>
 
   <Target Name="CopyDocumentationFiles" AfterTargets="build">
     <ItemGroup>
-      <DocumentationFiles Include="$(OutputPath)\**\*.xml" />
+      <DocumentationFiles Include="$(OutputPath)\**\*.xml"/>
     </ItemGroup>
-    <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(OutputPath)\Documentation" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(OutputPath)\Documentation" SkipUnchangedFiles="true"/>
   </Target>
 
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonApi.Common\CommonApi.Common.csproj" />
+    <ProjectReference Include="..\CommonApi.Common\CommonApi.Common.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Logs\**" />
+    <Compile Remove="Logs\**"/>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Logs\**" />
+    <EmbeddedResource Remove="Logs\**"/>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Logs\**" />
+    <Content Remove="Logs\**"/>
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Logs\**" />
+    <None Remove="Logs\**"/>
   </ItemGroup>
 
 </Project>

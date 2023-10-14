@@ -1,4 +1,5 @@
 # CommonApi
+
 基于单体架构的Asp.net Core Webapi
 
 # 整体架构
@@ -77,8 +78,6 @@
    }
    ```
 
-   
-
 # 命名规范
 
 1. `Controller`类以`Controller`结尾
@@ -95,7 +94,8 @@
 
 ## 日志记录
 
-项目采用serilog记录日志，实现微软官方自带log接口。微软官方日志包安装在CommonApi.Util项目中。记录日志要使用结构化的方式，不要使用拼接字符串的方式记录。结构化的好处在于结构清晰，便于查找，最重要的是结构化日志会缓存模板，可以大幅减少字符串的生成和内存占用。具体使用参考[serilog官方文档](https://github.com/serilog/serilog/wiki/Structured-Data)，简单使用方式如下：
+项目采用serilog记录日志，实现微软官方自带log接口。微软官方日志包安装在CommonApi.Util项目中。记录日志要使用结构化的方式，不要使用拼接字符串的方式记录。结构化的好处在于结构清晰，便于查找，最重要的是结构化日志会缓存模板，可以大幅减少字符串的生成和内存占用。具体使用参考[serilog官方文档](https://github.com/serilog/serilog/wiki/Structured-Data)
+，简单使用方式如下：
 
 ```C#
 public class Demo
@@ -115,8 +115,6 @@ public class Demo
     }
 }
 ```
-
-
 
 ## Dapper的使用
 
@@ -216,8 +214,6 @@ public void TestSqlBuilderUpdateSet()
             }
         }
 ```
-
-
 
 ### 参考链接
 

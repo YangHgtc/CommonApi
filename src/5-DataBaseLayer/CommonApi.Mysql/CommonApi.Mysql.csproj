@@ -4,11 +4,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySqlConnector" Version="2.2.7" />
+    <PackageReference Include="MySqlConnector" Version="2.2.7"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonApi.DataBase.Contracts\CommonApi.DataBase.Contracts.csproj" />
+    <ProjectReference Include="..\CommonApi.DataBase.Contracts\CommonApi.DataBase.Contracts.csproj"/>
   </ItemGroup>
 
 </Project>

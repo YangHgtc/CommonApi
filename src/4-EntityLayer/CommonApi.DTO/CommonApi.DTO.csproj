@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOS\**" />
-    <EmbeddedResource Remove="DTOS\**" />
-    <None Remove="DTOS\**" />
+    <Compile Remove="DTOS\**"/>
+    <EmbeddedResource Remove="DTOS\**"/>
+    <None Remove="DTOS\**"/>
   </ItemGroup>
 
 </Project>

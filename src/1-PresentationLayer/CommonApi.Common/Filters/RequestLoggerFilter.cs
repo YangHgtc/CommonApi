@@ -1,3 +1,4 @@
+using CommonApi.Common.Extensions;
 using CommonApi.Util.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -5,24 +6,15 @@ using Microsoft.Extensions.Logging;
 namespace CommonApi.Common.Filters;
 
 /// <summary>
-/// 记录请求过滤器
+///     记录请求过滤器
 /// </summary>
 /// <param name="logger"></param>
 public sealed class RequestLoggerFilter(ILogger<RequestLoggerFilter> logger) : IActionFilter
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        logger.LogInformation("""
-                                HTTP request information:
-                                Method: {Method}
-                                Path: {Path}
-                                QueryString: {QueryString}
-                                Headers: {Headers}
-                                Schema: {Scheme}
-                                Host: {Host}
-                                Body: {Body}
-                              """, context.HttpContext.Request.Method,
+        logger.LogRequest(context.HttpContext.Request.Method,
             context.HttpContext.Request.Path,
             context.HttpContext.Request.QueryString,
             context.HttpContext.Request.Headers,
@@ -31,9 +23,10 @@ public sealed class RequestLoggerFilter(ILogger<RequestLoggerFilter> logger) : I
             context.ActionArguments.Values.Serialize());
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void OnActionExecuted(ActionExecutedContext context)
     {
-
     }
 }
+
+

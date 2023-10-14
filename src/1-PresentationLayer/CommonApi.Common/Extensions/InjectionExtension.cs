@@ -3,24 +3,25 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CommonApi.Common.Extensions;
 
 /// <summary>
-/// 依赖注入扩展
+///     依赖注入扩展
 /// </summary>
 public static class InjectionExtension
 {
     /// <summary>
-    /// 通过扫描程序集进行注册
+    ///     通过扫描程序集进行注册
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="services"></param>
     /// <param name="serviceLifetime">生命周期</param>
     /// <returns></returns>
     /// <remarks>
-    /// 注意接口和实现类除了接口的I前缀外必须一致,如下示例
-    /// <code>
+    ///     注意接口和实现类除了接口的I前缀外必须一致,如下示例
+    ///     <code>
     /// public class Service : IService
     /// </code>
     /// </remarks>
-    public static IServiceCollection RegisterByScanAssembly<T>(this IServiceCollection services, ServiceLifetime serviceLifetime)
+    public static IServiceCollection RegisterByScanAssembly<T>(this IServiceCollection services,
+        ServiceLifetime serviceLifetime)
     {
         services.Scan(scan =>
         {
@@ -33,7 +34,7 @@ public static class InjectionExtension
     }
 
     /// <summary>
-    /// 注册为scope
+    ///     注册为scope
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="services"></param>
@@ -44,7 +45,7 @@ public static class InjectionExtension
     }
 
     /// <summary>
-    /// 注册为Singleton
+    ///     注册为Singleton
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="services"></param>
@@ -55,7 +56,7 @@ public static class InjectionExtension
     }
 
     /// <summary>
-    /// 注册为Transient
+    ///     注册为Transient
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="services"></param>

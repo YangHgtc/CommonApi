@@ -17,12 +17,11 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CommonApi.Common.Extensions;
 
 /// <summary>
-///
 /// </summary>
 public static class ServiceExtension
 {
     /// <summary>
-    /// 注入所需服务
+    ///     注入所需服务
     /// </summary>
     /// <param name="services"></param>
     /// <param name="config"></param>
@@ -30,15 +29,15 @@ public static class ServiceExtension
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddRepository()
-                .AddBusiness()
-                .AddValidation()
-                .AddMapper()
-                .AddJwt(config);
+            .AddBusiness()
+            .AddValidation()
+            .AddMapper()
+            .AddJwt(config);
         return services;
     }
 
     /// <summary>
-    /// 注入验证规则
+    ///     注入验证规则
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
@@ -49,7 +48,7 @@ public static class ServiceExtension
     }
 
     /// <summary>
-    /// 注入business
+    ///     注入business
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
@@ -59,7 +58,7 @@ public static class ServiceExtension
     }
 
     /// <summary>
-    /// 注入仓储
+    ///     注入仓储
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
@@ -69,7 +68,7 @@ public static class ServiceExtension
     }
 
     /// <summary>
-    /// 注册jwt
+    ///     注册jwt
     /// </summary>
     /// <param name="services"></param>
     /// <param name="config"></param>
@@ -85,7 +84,7 @@ public static class ServiceExtension
     }
 
     /// <summary>
-    /// 注册dapper
+    ///     注册dapper
     /// </summary>
     /// <param name="services"></param>
     /// <param name="config"></param>
@@ -97,15 +96,16 @@ public static class ServiceExtension
         services.AddTransient<IDbConnectionFactory>(_ => new MysqlConnectionFactory(connection));
         services.AddTransient<IDbConnectionFactory>(_ => new SqliteConnectionFactory(connection));
         services.AddScoped<IDapperHelper, DapperHelper>();
-        services.AddSingleton<Func<IEnumerable<IDbConnectionFactory>>>(x => () => x.GetService<IEnumerable<IDbConnectionFactory>>()!);
-        services.AddSingleton<IAbstractFactory, AbstractFactory>();
+        services.AddSingleton<Func<IEnumerable<IDbConnectionFactory>>>(x =>
+            () => x.GetService<IEnumerable<IDbConnectionFactory>>()!);
+        services.AddSingleton<IAbstractConnectionFactory, AbstractConnectionFactory>();
         //添加dapper实体类
         ColumnMapper.FindCustomAttributesPropertyInfo<EntityForInjection>();
         return services;
     }
 
     /// <summary>
-    /// 注册mapper
+    ///     注册mapper
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>

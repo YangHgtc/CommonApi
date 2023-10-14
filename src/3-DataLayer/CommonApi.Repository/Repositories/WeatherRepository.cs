@@ -7,8 +7,8 @@ public sealed class WeatherRepository : IWeatherRepository
     public string[] GetSummaries()
     {
         return new[]
-                {
-                    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-                };
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
     }
 }

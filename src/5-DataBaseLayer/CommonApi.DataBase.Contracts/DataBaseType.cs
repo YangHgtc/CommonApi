@@ -3,32 +3,32 @@ namespace CommonApi.DataBase.Contracts;
 public enum DataBaseType
 {
     /// <summary>
-    /// 第一个注册的数据库
+    ///     第一个注册的数据库
     /// </summary>
     Default,
 
     /// <summary>
-    /// MySql
+    ///     MySql
     /// </summary>
     MySql,
 
     /// <summary>
-    /// Sqlite
+    ///     Sqlite
     /// </summary>
     Sqlite,
 
     /// <summary>
-    /// PostgreSQL
+    ///     PostgreSQL
     /// </summary>
     PostgreSQL,
 
     /// <summary>
-    /// MonogoDb
+    ///     MonogoDb
     /// </summary>
     MonogoDb,
 
     /// <summary>
-    /// LiteDb
+    ///     LiteDb
     /// </summary>
     LiteDb
 }

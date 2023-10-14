@@ -4,17 +4,18 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CommonApi.Common.Extensions;
+
 /// <summary>
-/// swagger扩展
+///     swagger扩展
 /// </summary>
 public static class SwaggerExtension
 {
     /// <summary>
-    /// 使用swagger
+    ///     使用swagger
     /// </summary>
     /// <param name="app"></param>
     /// <returns></returns>
-    public static WebApplication UseMySwaager(this WebApplication app)
+    public static WebApplication UseMySwagger(this WebApplication app)
     {
         app.UseSwagger();
         app.UseSwaggerUI();
@@ -22,7 +23,7 @@ public static class SwaggerExtension
     }
 
     /// <summary>
-    /// 添加swagger配置
+    ///     添加swagger配置
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
@@ -39,33 +40,30 @@ public static class SwaggerExtension
 
         return services;
     }
+
     /// <summary>
-    /// AddSecurityRequirement
+    ///     AddSecurityRequirement
     /// </summary>
     /// <param name="c"></param>
     private static void AddSecurityRequirement(SwaggerGenOptions c)
     {
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
             {
                 new OpenApiSecurityScheme
                 {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    },
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" },
                     Scheme = "oauth2",
                     Name = "Bearer",
-                    In = ParameterLocation.Header,
+                    In = ParameterLocation.Header
                 },
-                new List<string>()
+                Array.Empty<string>()
             }
         });
     }
 
     /// <summary>
-    /// AddSecurityDefinition
+    ///     AddSecurityDefinition
     /// </summary>
     /// <param name="c"></param>
     private static void AddSecurityDefinition(SwaggerGenOptions c)
@@ -85,7 +83,7 @@ public static class SwaggerExtension
     }
 
     /// <summary>
-    /// 添加xml注释文档
+    ///     添加xml注释文档
     /// </summary>
     /// <param name="c"></param>
     private static void AddXmlComments(SwaggerGenOptions c)
@@ -98,7 +96,6 @@ public static class SwaggerExtension
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="c"></param>
     private static void AddSwaggerDoc(SwaggerGenOptions c)
@@ -111,13 +108,12 @@ public static class SwaggerExtension
             //TermsOfService = new Uri("https://learn.microsoft.com/en-us/dotnet/csharp/"),
             Contact = new OpenApiContact
             {
-                Name = "yzc",
-                Email = "xxxx@gmail.com",
+                Name = "yzc", Email = "xxxx@gmail.com"
                 //Url = new Uri("https://learn.microsoft.com/en-us/dotnet/csharp/"),
             },
             License = new OpenApiLicense
             {
-                Name = "xxxx",
+                Name = "xxxx"
                 //Url = new Uri("https://learn.microsoft.com/en-us/dotnet/csharp/"),
             }
         });

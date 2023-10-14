@@ -1,20 +1,21 @@
 using System.Net;
 using CommonApi.Common.Common;
 using CommonApi.Util.Extensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace CommonApi.Common.Middlewares;
 
 /// <summary>
-/// 异常处理中间件
+///     异常处理中间件
 /// </summary>
 /// <param name="logger">日志</param>
 /// <param name="next">委托中间件</param>
 /// <remarks>
-/// <example>
-/// 中间件采用约定的方式编写,具体示例如下
-/// <code>
+///     <example>
+///         中间件采用约定的方式编写,具体示例如下
+///         <code>
 /// public sealed class CustomMiddleware(RequestDelegate next)
 /// {
 ///      public async Task InvokeAsync(HttpContext context)
@@ -23,12 +24,11 @@ namespace CommonApi.Common.Middlewares;
 ///      }
 /// }
 /// </code>
-/// </example>
+///     </example>
 /// </remarks>
 public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, RequestDelegate next)
 {
     /// <summary>
-    ///
     /// </summary>
     /// <param name="context"></param>
     public async Task InvokeAsync(HttpContext context)
@@ -45,7 +45,7 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, Req
     }
 
     /// <summary>
-    /// 处理异常
+    ///     处理异常
     /// </summary>
     /// <param name="context"></param>
     /// <param name="exception"></param>
@@ -58,8 +58,8 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, Req
         response.StatusCode = exception switch
         {
             KeyNotFoundException => (int)HttpStatusCode.NotFound,
-            FluentValidation.ValidationException => (int)HttpStatusCode.BadRequest,
-            _ => (int)HttpStatusCode.InternalServerError,
+            ValidationException => (int)HttpStatusCode.BadRequest,
+            _ => (int)HttpStatusCode.InternalServerError
         };
 
         if (!response.HasStarted)
@@ -74,7 +74,7 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, Req
     }
 
     /// <summary>
-    /// 包装异常信息
+    ///     包装异常信息
     /// </summary>
     /// <param name="exception"></param>
     /// <returns></returns>
@@ -89,10 +89,10 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, Req
         }
 
         var errorResult = new ResponseResult<bool> { Code = (int)ResponseStatusCode.Fail };
-        if (exception is FluentValidation.ValidationException fluentException)
+        if (exception is ValidationException fluentException)
         {
             var errors = fluentException.Errors.Select(error => error.ErrorMessage);
-            errorResult.Message = string.Join(";", errors);
+            errorResult.Message = string.Join(';', errors);
         }
         else
         {
