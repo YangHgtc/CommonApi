@@ -21,6 +21,7 @@ public static partial class LogExtension
     /// <param name="body">请求体</param>
     [LoggerMessage(
         EventId = 0,
+        SkipEnabledCheck = true,
         Level = LogLevel.Information,
         Message = """
                     HTTP request information:
@@ -45,16 +46,19 @@ public static partial class LogExtension
     /// <summary>
     /// 记录响应
     /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="statusCode"></param>
-    /// <param name="contentType"></param>
-    /// <param name="headers"></param>
-    /// <param name="body"></param>
+    /// <param name="logger">日志</param>
+    /// <param name="path">路径</param>
+    /// <param name="statusCode">状态码</param>
+    /// <param name="contentType">内容类型</param>
+    /// <param name="headers">头</param>
+    /// <param name="body">响应体</param>
     [LoggerMessage(
         EventId = 1,
+        SkipEnabledCheck = true,
         Level = LogLevel.Information,
         Message = """
                      HTTP response information:
+                     Path: {Path}
                      StatusCode: {StatusCode}
                      ContentType: {ContentType}
                      Headers: {Headers}
@@ -62,6 +66,7 @@ public static partial class LogExtension
                   """)]
     public static partial void LogResponse(
         this ILogger logger,
+        string path,
         int statusCode,
         string? contentType,
         IHeaderDictionary headers,

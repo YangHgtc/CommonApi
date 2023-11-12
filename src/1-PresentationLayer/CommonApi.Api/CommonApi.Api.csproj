@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <UserSecretsId>0afe1e32-a688-4186-9af2-acafb9cc1a86</UserSecretsId>
+    <!--#if (UseSwagger)-->
+    <DefineConstants>UseSwagger</DefineConstants>
+    <!--#endif-->
   </PropertyGroup>
 
   <ProjectExtensions>
@@ -11,11 +13,12 @@
     </VisualStudio>
   </ProjectExtensions>
 
+  <!-- 把解决方案中生成的xml文档复制到主项目的Documentation文件夹中-->
   <Target Name="CopyDocumentationFiles" AfterTargets="build">
     <ItemGroup>
       <DocumentationFiles Include="$(OutputPath)\**\*.xml"/>
     </ItemGroup>
-    <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(OutputPath)\Documentation" SkipUnchangedFiles="true"/>
+    <Move SourceFiles="@(DocumentationFiles)" DestinationFolder="$(OutputPath)\Documentation"/>
   </Target>
 
 

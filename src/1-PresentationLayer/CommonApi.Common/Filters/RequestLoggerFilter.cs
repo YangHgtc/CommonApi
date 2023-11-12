@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 namespace CommonApi.Common.Filters;
 
 /// <summary>
-///     记录请求过滤器
+/// 记录请求过滤器
 /// </summary>
-/// <param name="logger"></param>
+/// <param name="logger"> </param>
 public sealed class RequestLoggerFilter(ILogger<RequestLoggerFilter> logger) : IActionFilter
 {
     /// <inheritdoc />

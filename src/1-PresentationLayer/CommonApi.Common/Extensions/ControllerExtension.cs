@@ -13,10 +13,10 @@ namespace CommonApi.Common.Extensions;
 public static class ControllerExtension
 {
     /// <summary>
-    ///     添加全局json序列化设置
+    /// 添加全局json序列化设置
     /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
+    /// <param name="services"> </param>
+    /// <returns> </returns>
     public static IServiceCollection AddMvcControllers(this IServiceCollection services)
     {
         services.AddControllers(options =>

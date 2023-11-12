@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 namespace CommonApi.Common.Filters;
 
 /// <summary>
-///     记录响应过滤器
+/// 记录响应过滤器
 /// </summary>
-/// <param name="logger"></param>
+/// <param name="logger"> </param>
 public sealed class ResponseLoggerFilter(ILogger<RequestLoggerFilter> logger) : IResultFilter
 {
     /// <inheritdoc />
@@ -27,7 +27,9 @@ public sealed class ResponseLoggerFilter(ILogger<RequestLoggerFilter> logger) : 
             }
 
             var response = result.Value;
-            logger.LogResponse(context.HttpContext.Response.StatusCode,
+            logger.LogResponse(
+                context.HttpContext.Request.Path,
+                context.HttpContext.Response.StatusCode,
                 context.HttpContext.Response.ContentType,
                 context.HttpContext.Response.Headers,
                 response.Serialize());

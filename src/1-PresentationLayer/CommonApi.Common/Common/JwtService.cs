@@ -11,9 +11,9 @@ public interface IJwtService
 {
     /// <summary>
     /// </summary>
-    /// <param name="claims"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
+    /// <param name="claims"> </param>
+    /// <param name="options"> </param>
+    /// <returns> </returns>
     string BuildToken(IEnumerable<Claim> claims, JwtOptions options);
 }
 
@@ -23,9 +23,9 @@ public sealed class JwtService : IJwtService
 {
     /// <summary>
     /// </summary>
-    /// <param name="claims"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
+    /// <param name="claims"> </param>
+    /// <param name="options"> </param>
+    /// <returns> </returns>
     public string BuildToken(IEnumerable<Claim> claims, JwtOptions options)
     {
         //过期时间
@@ -41,6 +41,7 @@ public sealed class JwtService : IJwtService
     }
 }
 
+
 /// <summary>
 /// </summary>
 public sealed class JwtOptions
@@ -50,22 +51,22 @@ public sealed class JwtOptions
     public const string Position = "JWT";
 
     /// <summary>
-    ///     签发者
-    /// </summary>
-    public string Issuer { get; set; }
-
-    /// <summary>
-    ///     接收者
+    /// 接收者
     /// </summary>
     public string Audience { get; set; }
 
     /// <summary>
-    ///     密钥
-    /// </summary>
-    public string Key { get; set; }
-
-    /// <summary>
-    ///     过期时间
+    /// 过期时间
     /// </summary>
     public int ExpireSeconds { get; set; }
+
+    /// <summary>
+    /// 签发者
+    /// </summary>
+    public string Issuer { get; set; }
+
+    /// <summary>
+    /// 密钥
+    /// </summary>
+    public string Key { get; set; }
 }

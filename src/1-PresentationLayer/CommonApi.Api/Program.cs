@@ -1,24 +1,12 @@
 using CommonApi.Common.Extensions;
 using CommonApi.Common.Middlewares;
 using Serilog;
-using Serilog.Events;
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
-        true)
-    .Build();
+SerilogExtension.CreateBootstrapLogger();
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .ReadFrom.Configuration(configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
 try
 {
-    Log.Information("Starting web application");
+    Log.Information("Web application is starting");
     var builder = WebApplication.CreateBuilder(args);
     var config = builder.Configuration;
     builder.Host.AddSerilog();
@@ -28,7 +16,9 @@ try
     builder.Services.AddEndpointsApiExplorer();
     if (builder.Environment.IsDevelopment())
     {
+#if UseSwagger
         builder.Services.AddSwagger();
+#endif
     }
 
     builder.Services.AddServices(config);

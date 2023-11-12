@@ -8,17 +8,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace CommonApi.Api.Controllers;
 
 /// <summary>
-///     天气接口
+/// 天气接口
 /// </summary>
-//[Authorize]
+// [Authorize]
 public class WeatherForecastController(
     ILogger<WeatherForecastController> logger,
     IWeatherService weatherService) : ApiControllerBase
 {
+    [HttpGet]
+    public IResult GetNavite()
+    {
+        return Results.Ok("412121312");
+    }
+
     /// <summary>
-    ///     获取天气
+    /// 获取天气
     /// </summary>
-    /// <returns></returns>
+    /// <returns> </returns>
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ResponseResult<bool>), 400)]
@@ -31,21 +37,14 @@ public class WeatherForecastController(
     }
 
     /// <summary>
-    ///     请求天气
+    /// 请求天气
     /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
+    /// <param name="request"> </param>
+    /// <returns> </returns>
     [HttpPost]
     [ValidationFilter<WeatherRequest>]
     public ResponseResult<bool> PostWeatherForecast([FromBody] WeatherRequest request)
     {
         return Success(true);
-    }
-
-
-    [HttpGet]
-    public IResult GetNavite()
-    {
-        return Results.Ok("412121312");
     }
 }

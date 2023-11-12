@@ -36,7 +36,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0-Soultion Items", "0-Soult
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		.template.config\dotnetcli.host.json = .template.config\dotnetcli.host.json
+		.template.config\ide.host.json = .template.config\ide.host.json
 		README.md = README.md
+		.template.config\template.json = .template.config\template.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5-DataBaseLayer", "5-DataBaseLayer", "{8B87840F-C08B-48C1-9913-3225F71CF397}"

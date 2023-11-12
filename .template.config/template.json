@@ -12,7 +12,7 @@
     "language": "C#",
     "type": "project"
   },
-  "sourceName": "Leadchina",
+  "sourceName": "CommonApi",
   "generatorVersions": "[1.0.0.0-*)",
   "sources": [
     {
@@ -60,6 +60,12 @@
       ],
       "replaces": "net7.0",
       "defaultValue": "net7.0"
+    },
+    "UseSwagger": {
+      "type": "parameter",
+      "description": "Enable Swagger",
+      "datatype": "bool",
+      "defaultValue": "true"
     }
   }
 }

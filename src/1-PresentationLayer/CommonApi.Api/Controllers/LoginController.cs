@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace CommonApi.Api.Controllers;
 
 /// <summary>
-///     登录接口
+/// 登录接口
 /// </summary>
 public sealed class LoginController : ApiControllerBase
 {
@@ -16,8 +16,8 @@ public sealed class LoginController : ApiControllerBase
 
     /// <summary>
     /// </summary>
-    /// <param name="jwtService"></param>
-    /// <param name="options"></param>
+    /// <param name="jwtService"> </param>
+    /// <param name="options"> </param>
     public LoginController(IJwtService jwtService, IOptions<JwtOptions> options)
     {
         _jwtService = jwtService;
@@ -25,9 +25,9 @@ public sealed class LoginController : ApiControllerBase
     }
 
     /// <summary>
-    ///     获取token
+    /// 获取token
     /// </summary>
-    /// <returns></returns>
+    /// <returns> </returns>
     [AllowAnonymous]
     [HttpGet]
     public ResponseResult<string> GetToken()

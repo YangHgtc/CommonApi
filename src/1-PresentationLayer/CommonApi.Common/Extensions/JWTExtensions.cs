@@ -8,15 +8,15 @@ using Microsoft.IdentityModel.Tokens;
 namespace CommonApi.Common.Extensions;
 
 /// <summary>
-///     JWT扩展
+/// JWT扩展
 /// </summary>
 public static class JwtExtensions
 {
     /// <summary>
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="jwtOptions"></param>
-    /// <returns></returns>
+    /// <param name="services"> </param>
+    /// <param name="jwtOptions"> </param>
+    /// <returns> </returns>
     public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services, JwtOptions jwtOptions)
     {
         return services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

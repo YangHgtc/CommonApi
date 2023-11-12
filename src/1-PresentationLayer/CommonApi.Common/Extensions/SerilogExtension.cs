@@ -1,5 +1,7 @@
+using CommonApi.Util.Helpers;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 
 namespace CommonApi.Common.Extensions;
 
@@ -14,9 +16,24 @@ public static class SerilogExtension
     public static IHostBuilder AddSerilog(this IHostBuilder builder)
     {
         builder.UseSerilog((context, services, configuration) => configuration
-            .ReadFrom.Configuration(context.Configuration)
-            .ReadFrom.Services(services)
-            .Enrich.FromLogContext());
+                            .ReadFrom.Configuration(context.Configuration)
+                            .ReadFrom.Services(services)
+                            .Enrich.FromLogContext());
         return builder;
+    }
+
+    /// <summary>
+    /// 创建两段初始化
+    /// </summary>
+    public static void CreateBootstrapLogger()
+    {
+        var configuration = ConfigurationHelper.Instance;
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .ReadFrom.Configuration(configuration)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateBootstrapLogger();
     }
 }

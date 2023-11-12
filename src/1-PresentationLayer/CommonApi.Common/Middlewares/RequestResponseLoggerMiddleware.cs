@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace CommonApi.Common.Middlewares;
 
 /// <summary>
-///     请求响应中间件
+/// 请求响应中间件
 /// </summary>
 public sealed class RequestResponseLoggerMiddleware(
     IConfiguration config,
@@ -13,18 +13,18 @@ public sealed class RequestResponseLoggerMiddleware(
     RequestDelegate next)
 {
     /// <summary>
-    ///     是否启用记录请求和响应
+    /// 是否启用记录请求和响应
     /// </summary>
     private readonly bool _isRequestResponseLoggingEnabled = config.GetValue("EnableRequestResponseLogging", false);
 
     /// <summary>
-    ///     日志
+    /// 日志
     /// </summary>
     private readonly ILogger<RequestResponseLoggerMiddleware> _logger = logger;
 
     /// <summary>
     /// </summary>
-    /// <param name="httpContext"></param>
+    /// <param name="httpContext"> </param>
     public async Task InvokeAsync(HttpContext httpContext)
     {
         if (!_isRequestResponseLoggingEnabled)
@@ -51,7 +51,8 @@ public sealed class RequestResponseLoggerMiddleware(
             httpContext.Request.Host,
             await ReadBodyFromRequest(httpContext.Request));
 
-        // Temporarily replace the HttpResponseStream, which is a write-only stream, with a MemoryStream to capture it's value in-flight.
+        // Temporarily replace the HttpResponseStream, which is a write-only stream, with a
+        // MemoryStream to capture it's value in-flight.
         var originalResponseBody = httpContext.Response.Body;
         using var newResponseBody = new MemoryStream();
 
@@ -78,10 +79,10 @@ public sealed class RequestResponseLoggerMiddleware(
     }
 
     /// <summary>
-    ///     从流中读取请求体
+    /// 从流中读取请求体
     /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
+    /// <param name="request"> </param>
+    /// <returns> </returns>
     private static async Task<string> ReadBodyFromRequest(HttpRequest request)
     {
         // Ensure the request's body can be read multiple times (for the next middlewares in the pipeline).
