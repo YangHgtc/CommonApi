@@ -48,4 +48,3 @@ finally
     await Log.CloseAndFlushAsync();
 }
 
-
